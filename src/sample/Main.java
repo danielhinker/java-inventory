@@ -28,7 +28,7 @@ public class Main extends Application {
     Label productsLabel;
 
     Stage window;
-    Scene mainScene;
+    Scene mainScene, addScene;
 
     @Override
     public void start(Stage primaryStage) throws Exception{
@@ -37,28 +37,14 @@ public class Main extends Application {
 
         //GridPane with 10px padding around edge
         GridPane mainGrid = new GridPane();
-        mainGrid.setPadding(new Insets(20, 20, 20, 20));
-        mainGrid.setVgap(16);
-        mainGrid.setHgap(20);
-
-        GridPane partsGrid = new GridPane();
-        partsGrid.setPadding(new Insets(10, 10, 10, 10));
-        partsGrid.setVgap(8);
-        partsGrid.setHgap(10);
-        GridPane.setConstraints(partsGrid, 0, 2);
-
-        GridPane productsGrid = new GridPane();
-        productsGrid.setPadding(new Insets(10, 10, 10, 10));
-        productsGrid.setVgap(8);
-        productsGrid.setHgap(10);
-        GridPane.setConstraints(productsGrid, 1, 2);
+        mainGrid.setPadding(new Insets(10, 10, 10, 10));
+        mainGrid.setVgap(8);
+        mainGrid.setHgap(10);
 
         Label mainLabel = new Label("Inventory Management System");
 
+        partsLabel = new Label("Parts");
 
-        // Parts Grid
-
-        GridPane.setConstraints(mainLabel, 0, 0);
 
         addPartButton = new Button("Add   ");
         modifyPartButton = new Button("Modify");
@@ -66,46 +52,63 @@ public class Main extends Application {
         searchPartButton = new Button("Search");
         searchPartBar = new TextField();
 
-        GridPane.setConstraints(searchPartBar, 1, 1);
-//        GridPane.setColumnSpan(searchPartBar, 1);
-//        GridPane.setRowSpan(searchPartBar, 1);
-        GridPane.setConstraints(searchPartButton, 0, 1);
-
+        GridPane.setConstraints(mainLabel, 0, 0);
+        GridPane.setConstraints(partsLabel, 0, 1);
+        GridPane.setConstraints(searchPartBar, 2, 1);
+        GridPane.setConstraints(searchPartButton, 1, 1);
         GridPane.setConstraints(addPartButton, 0, 2);
         GridPane.setConstraints(modifyPartButton, 1, 2);
         GridPane.setConstraints(deletePartButton, 2, 2);
 
-//        addPartButton.setOnAction(e->window.setScene(scene2));
+        addPartButton.setOnAction(e->window.setScene(addScene));
+
+        productsLabel = new Label("Products");
+        searchProductButton = new Button("Search");
+        searchProductBar = new TextField();
 
 
         // Products Grid
+        GridPane.setConstraints(productsLabel, 0, 6);
+        GridPane.setConstraints(searchProductButton, 1, 6);
+        GridPane.setConstraints(searchProductBar, 2, 6);
+
         addProductButton = new Button("Add");
         modifyProductButton = new Button("Modify");
         deleteProductButton = new Button("Delete");
-        searchProductButton = new Button("Search");
 
-        GridPane.setConstraints(addProductButton, 0, 3);
-        GridPane.setConstraints(modifyProductButton, 1, 3);
-        GridPane.setConstraints(deleteProductButton, 2, 3);
+        GridPane.setConstraints(addProductButton, 0, 7);
+        GridPane.setConstraints(modifyProductButton, 1, 7);
+        GridPane.setConstraints(deleteProductButton, 2, 7);
 
 
         // Layout 1 - children are laid out in vertical column
 //        VBox layout1 = new VBox(20);
 //        layout1.getChildren().addAll(label1, addPartButton);
 
-        partsGrid.getChildren().addAll(searchPartBar, searchPartButton, addPartButton, modifyPartButton, deletePartButton);
-//        productsGrid.getChildren().addAll(addProductButton, modifyProductButton, deleteProductButton);
-        mainGrid.getChildren().addAll(mainLabel, partsGrid, productsGrid);
+        mainGrid.getChildren().addAll(mainLabel, partsLabel, searchPartButton, searchPartBar, addPartButton,
+                modifyPartButton, deletePartButton, productsLabel, searchProductButton, searchProductBar,
+                addProductButton, modifyProductButton, deleteProductButton);
         mainScene = new Scene(mainGrid, 700, 500);
 
-        // Button 2
 
 //        modifyPartButton.setOnAction(e->window.setScene(scene1));
+
+//        StackPane layout = new StackPane();
+//        layout.getChildren().add(addPartButton);
+//        Scene scene = new Scene(layout, 300, 250);
+//        primaryStage.setScene(scene);
 
         // Layout 2
 //        StackPane layout2 = new StackPane();
 //        layout2.getChildren().add(modifyPartButton);
-//        scene2 = new Scene(layout2, 600, 300);
+
+        //GridPane with 10px padding around edge
+        GridPane addGrid = new GridPane();
+        addGrid.setPadding(new Insets(10, 10, 10, 10));
+        addGrid.setVgap(8);
+        addGrid.setHgap(10);
+
+        addScene = new Scene(addGrid, 700, 500);
 
 //         Display Scene 1
         window.setScene(mainScene);
@@ -117,7 +120,6 @@ public class Main extends Application {
 
 
 //        addPartButton.setOnAction(e->System.out.println(e));
-
 
         //This class will handle the button events
 //        button.setOnAction(this);
