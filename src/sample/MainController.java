@@ -54,12 +54,14 @@ public class MainController implements Initializable {
     private TableColumn<Product, Double> productPrice;
 
 
-    ObservableList<Product> productsList = FXCollections.observableArrayList();
+
 
 
 
     private ObservableList<Part> allParts;
     private ObservableList<Product> allProducts;
+    ObservableList<Product> productsList = FXCollections.observableArrayList();
+    ObservableList<Part> partsList = FXCollections.observableArrayList();
 
     public void addPart(Part newPart) {
 
@@ -110,13 +112,21 @@ public class MainController implements Initializable {
     }
 
     public ObservableList<Part> addSampleParts() {
-        ObservableList<Part> partsList = FXCollections.observableArrayList();
-        partsList.add(new Part(1, "Part 1", 71.78, 2, 7, 3, true, -1, "1"));
-        partsList.add(new Part(2, "Part 2", 42.89, 3, 10, 1, false, 3, "Apple"));
+//        ObservableList<Part> partsListSample = FXCollections.observableArrayList();
+        partsList.add(new Part(1, "Part 1", 71.78, 2, 7, 3, true, 1));
+//        partsList.add(new Part(2, "Part 2", 42.89, 3, 10, 1, false, 3, "Apple"));
         return partsList;
     }
 
+    public ObservableList<Product> addSampleProducts() {
+
+        productsList.add(new Product(1, "Part 1", 71.78, 2, 7, 3));
+        productsList.add(new Product(2, "Part 2", 42.89, 3, 10, 1));
+        return productsList;
+    }
+
     Part partClicked;
+    Product productClicked;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -136,6 +146,22 @@ public class MainController implements Initializable {
 //                System.out.println(partClicked);
             }
         });
+
+        productId.setCellValueFactory(new PropertyValueFactory<Product, Integer>("id"));
+        productPrice.setCellValueFactory(new PropertyValueFactory<Product, Double>("price"));
+        productName.setCellValueFactory(new PropertyValueFactory<Product, String>("name"));
+        productStock.setCellValueFactory(new PropertyValueFactory<Product, Integer>("stock"));
+
+        productTable.setItems(addSampleProducts());
+
+        productTable.setOnMouseClicked(new EventHandler() {
+            @Override
+            public void handle(Event event) {
+
+                productClicked = productTable.getSelectionModel().getSelectedItem();
+//                System.out.println(partClicked);
+            }
+        });
     }
 
 
@@ -146,8 +172,8 @@ public class MainController implements Initializable {
 
     public void handlePartAdd() {
         try {
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("AddPart.fxml"));
-            Parent root1 = (Parent) fxmlLoader.load();
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("AddPart.fxml"));
+            Parent root1 = (Parent) loader.load();
             Stage stage = new Stage();
             stage.setScene(new Scene(root1));
             stage.show();
@@ -176,6 +202,10 @@ public class MainController implements Initializable {
 
     public void handlePartDelete() {
         System.out.println("partDelete");
+        if (partClicked != null) {
+            partTable.getItems().remove(partClicked);
+            partClicked = null;
+        }
     }
 
     public void handleProductSearch() {
@@ -211,6 +241,11 @@ public class MainController implements Initializable {
 
     public void handleProductDelete() {
         System.out.println("productDelete");
+    }
+
+    public void dataReceived(Part part) {
+        partsList.add(part);
+//        System.out.println(text);
     }
 
 

@@ -25,10 +25,10 @@
             </TableView>
             <TableView layoutX="404.0" layoutY="200.0" prefHeight="200.0" prefWidth="386.0" fx:id="productTable">
                <columns>
-                  <TableColumn prefWidth="75.0" text="Part ID" fx:id="productId"/>
-                  <TableColumn prefWidth="75.0" text="Part Name" fx:id="productName"/>
+                  <TableColumn prefWidth="75.0" text="Product ID" fx:id="productId"/>
+                  <TableColumn prefWidth="75.0" text="Product Name" fx:id="productName"/>
                   <TableColumn prefWidth="93.0" text="Inventory Level" fx:id="productStock"/>
-                  <TableColumn prefWidth="116.0" text="Price/Cost per Unit" fx:id="productPrice"/>
+                  <TableColumn prefWidth="116.0" text="Price per Unit" fx:id="productPrice"/>
                </columns>
             </TableView>
             <TextField layoutX="640.0" layoutY="159.0" prefHeight="27.0" prefWidth="123.0" />

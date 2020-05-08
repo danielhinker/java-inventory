@@ -10,6 +10,7 @@ public class Product {
     private int stock;
     private int min;
     private int max;
+    private ObservableList<Part> associatedParts = null;
 
 
     public Product(int id, String name, double price, int stock, int min, int max) {
@@ -48,11 +49,16 @@ public class Product {
     }
 
     public void addAssociatedPart(Part part) {
-
+        associatedParts.add(part);
     }
 
     public boolean deleteAssociatedPart(Part selectedAssociatedPart) {
-        return false;
+        if (associatedParts.contains(selectedAssociatedPart)) {
+            associatedParts.remove(selectedAssociatedPart);
+            return true;
+        } else {
+            return false;
+        }
     }
 
 
@@ -84,9 +90,8 @@ public class Product {
     }
 
     public ObservableList<Part> getAllAssociatedParts() {
-//        ObservableList<Part> parts = FXCollections.observableArrayList();
-//        parts.add()
-        return null;
+
+        return associatedParts;
 
     }
 
