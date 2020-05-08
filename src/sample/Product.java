@@ -3,13 +3,14 @@ package sample;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
-public class Product extends Part {
+public class Product {
     private int id;
     private String name;
     private double price;
     private int stock;
     private int min;
     private int max;
+
 
     public Product(int id, String name, double price, int stock, int min, int max) {
         this.id = id;
@@ -23,27 +24,27 @@ public class Product extends Part {
     // Setters
 
     public void setId(int id) {
-
+        this.id = id;
     }
 
     public void setName(String name) {
-
+        this.name = name;
     }
 
     public void setPrice(double price) {
-
+        this.price = price;
     }
 
     public void setStock(int stock) {
-
+        this.stock = stock;
     }
 
     public void setMin(int min) {
-
+        this.min = min;
     }
 
     public void setMax(int max) {
-
+        this.max = max;
     }
 
     public void addAssociatedPart(Part part) {
@@ -59,27 +60,27 @@ public class Product extends Part {
     // Getter Methods
 
     public int getId() {
-        return 0;
+        return id;
     }
 
     public String getName() {
-        return null;
+        return name;
     }
 
     public double getPrice() {
-        return 0;
+        return price;
     }
 
     public int getStock() {
-        return 0;
+        return stock;
     }
 
     public int getMin() {
-        return 0;
+        return min;
     }
 
     public int getMax() {
-        return 0;
+        return max;
     }
 
     public ObservableList<Part> getAllAssociatedParts() {

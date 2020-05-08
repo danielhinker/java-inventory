@@ -9,19 +9,19 @@
 <?import javafx.scene.text.Font?>
 
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="478.0" prefWidth="354.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="478.0" prefWidth="354.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.ModifyPartController">
    <children>
       <Label layoutX="20.0" layoutY="27.0" text="Modify Part" textFill="#0c0c79">
          <font>
             <Font size="20.0" />
          </font>
       </Label>
-      <RadioButton layoutX="140.0" layoutY="40.0" mnemonicParsing="false" text="In-House">
+      <RadioButton layoutX="140.0" layoutY="40.0" mnemonicParsing="false" text="In-House" fx:id="inhouseButton">
          <toggleGroup>
             <ToggleGroup fx:id="categories" />
          </toggleGroup>
       </RadioButton>
-      <RadioButton layoutX="235.0" layoutY="40.0" mnemonicParsing="false" text="Outsourced" toggleGroup="$categories" />
+      <RadioButton layoutX="235.0" layoutY="40.0" mnemonicParsing="false" text="Outsourced" toggleGroup="$categories" fx:id="outsourcedButton"/>
       <Label layoutX="44.0" layoutY="95.0" text="ID" />
       <Label layoutX="44.0" layoutY="139.0" text="Name" />
       <Label layoutX="44.0" layoutY="185.0" text="Inv" />
@@ -36,7 +36,7 @@
       <TextField layoutX="96.0" layoutY="273.0" prefHeight="17.0" prefWidth="75.0" />
       <TextField layoutX="235.0" layoutY="273.0" prefHeight="17.0" prefWidth="75.0" />
       <TextField layoutX="159.0" layoutY="322.0" prefHeight="27.0" prefWidth="152.0" />
-      <Button layoutX="166.0" layoutY="401.0" mnemonicParsing="false" text="Save" />
-      <Button layoutX="245.0" layoutY="401.0" mnemonicParsing="false" text="Cancel" />
+      <Button layoutX="166.0" layoutY="401.0" mnemonicParsing="false" text="Save" fx:id="saveButton" onAction="#handleSave"/>
+      <Button layoutX="245.0" layoutY="401.0" mnemonicParsing="false" text="Cancel" fx:id="cancelButton" onAction="#handleCancel"/>
    </children>
 </AnchorPane>

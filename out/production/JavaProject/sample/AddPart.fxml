@@ -9,7 +9,7 @@
 <?import javafx.scene.text.Font?>
 
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="478.0" prefWidth="354.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="478.0" prefWidth="354.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.AddPartController">
    <children>
       <Label layoutX="20.0" layoutY="27.0" text="Add Part" textFill="#0c0c79">
          <font>
@@ -37,6 +37,6 @@
       <TextField layoutX="235.0" layoutY="273.0" prefHeight="17.0" prefWidth="75.0" />
       <TextField layoutX="159.0" layoutY="322.0" prefHeight="27.0" prefWidth="152.0" />
       <Button layoutX="166.0" layoutY="401.0" mnemonicParsing="false" text="Save" />
-      <Button layoutX="245.0" layoutY="401.0" mnemonicParsing="false" text="Cancel" />
+      <Button layoutX="245.0" layoutY="401.0" mnemonicParsing="false" text="Cancel" fx:id="cancelButton" onAction="#handleCancel" />
    </children>
 </AnchorPane>

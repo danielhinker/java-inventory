@@ -1,6 +1,6 @@
 package sample;
 
-public abstract class Part {
+public class Part {
 
     private int id;
     private String name;
@@ -8,33 +8,72 @@ public abstract class Part {
     private int stock;
     private int min;
     private int max;
+    private boolean inhouse;
+    private int associatedpartId;
+    private String nameId;
 
     // Setters
 
-    public abstract void setId(int id);
+    public Part(int id, String name, double price, int stock, int min, int max, boolean inhouse, int associatedpartId, String nameId) {
+        this.id = id;
+        this.name = name;
+        this.price = price;
+        this.stock = stock;
+        this.min = min;
+        this.max = max;
+        this.inhouse = inhouse;
+        this.associatedpartId = associatedpartId;
+        this.nameId = nameId;
+    }
 
-    public abstract void setName(String name);
+    public void setId(int id) {
+        this.id = id;
+    };
 
-    public abstract void setPrice(double price);
+    public void setName(String name) {
+        this.name = name;
+    };
 
-    public abstract void setStock(int stock);
+    public void setPrice(double price) {
+        this.price = price;
+    };
 
-    public abstract void setMin(int min);
+    public void setStock(int stock) {
+        this.stock = stock;
+    };
 
-    public abstract void setMax(int max);
+    public void setMin(int min) {
+        this.min = min;
+    };
+
+    public void setMax(int max) {
+        this.max = max;
+    };
 
     // Getter Methods
 
-    public abstract int getId();
+    public int getId() {
+        return id;
+    };
 
-    public abstract String getName();
+    public String getName() {
+        return name;
+    };
 
-    public abstract double getPrice();
+    public double getPrice() {
+        return price;
+    };
 
-    public abstract int getStock();
+    public int getStock() {
+        return stock;
+    };
 
-    public abstract int getMin();
+    public int getMin() {
+        return min;
+    };
 
-    public abstract int getMax();
+    public int getMax() {
+        return max;
+    };
 
 }
