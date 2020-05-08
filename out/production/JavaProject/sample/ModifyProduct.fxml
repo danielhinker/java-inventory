@@ -18,12 +18,12 @@
       </Label>
       <Button layoutX="482.0" layoutY="44.0" mnemonicParsing="false" text="Search" />
       <TextField layoutX="569.0" layoutY="44.0" />
-      <TableView layoutX="406.0" layoutY="95.0" prefHeight="140.0" prefWidth="330.0">
+      <TableView layoutX="406.0" layoutY="95.0" prefHeight="140.0" prefWidth="330.0" fx:id="partTable">
         <columns>
-          <TableColumn prefWidth="75.0" text="Part ID" />
-          <TableColumn prefWidth="75.0" text="Part Name" />
-            <TableColumn prefWidth="89.0" text="Inventory Level" />
-            <TableColumn prefWidth="89.0" text="Price Per Unit" />
+           <TableColumn prefWidth="75.0" text="Part ID" fx:id="partId"/>
+           <TableColumn prefWidth="75.0" text="Part Name" fx:id="partName"/>
+           <TableColumn prefWidth="93.0" text="Inventory Level" fx:id="partStock"/>
+           <TableColumn prefWidth="115.0" text="Price/Cost per Unit" fx:id="partPrice"/>
         </columns>
       </TableView>
       <TableView layoutX="406.0" layoutY="317.0" prefHeight="140.0" prefWidth="330.0">

@@ -13,8 +13,11 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
+import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import javafx.event.EventHandler;
+
+import javax.xml.soap.Text;
 import java.net.URL;
 import java.util.ResourceBundle;
 
@@ -64,11 +67,12 @@ public class MainController implements Initializable {
     ObservableList<Part> partsList = FXCollections.observableArrayList();
 
     public void addPart(Part newPart) {
-
+        partsList.add(newPart);
     }
 
     public void addProduct(Product newProduct) {
 
+        productsList.add(newProduct);
     }
 
     public Part lookupPart(int partId) {
@@ -112,9 +116,9 @@ public class MainController implements Initializable {
     }
 
     public ObservableList<Part> addSampleParts() {
-//        ObservableList<Part> partsListSample = FXCollections.observableArrayList();
+
         partsList.add(new Part(1, "Part 1", 71.78, 2, 7, 3, true, 1));
-//        partsList.add(new Part(2, "Part 2", 42.89, 3, 10, 1, false, 3, "Apple"));
+
         return partsList;
     }
 
@@ -124,7 +128,7 @@ public class MainController implements Initializable {
         productsList.add(new Product(2, "Part 2", 42.89, 3, 10, 1));
         return productsList;
     }
-
+    ObservableList<Part> associatedParts;
     Part partClicked;
     Product productClicked;
 
@@ -140,9 +144,10 @@ public class MainController implements Initializable {
 
         partTable.setOnMouseClicked(new EventHandler() {
             @Override
-            public void handle(Event event) {
+            public void handle(Event e) {
 
                 partClicked = partTable.getSelectionModel().getSelectedItem();
+//                associatedParts.
 //                System.out.println(partClicked);
             }
         });
@@ -156,7 +161,7 @@ public class MainController implements Initializable {
 
         productTable.setOnMouseClicked(new EventHandler() {
             @Override
-            public void handle(Event event) {
+            public void handle(Event e) {
 
                 productClicked = productTable.getSelectionModel().getSelectedItem();
 //                System.out.println(partClicked);
@@ -176,6 +181,9 @@ public class MainController implements Initializable {
             Parent root1 = (Parent) loader.load();
             Stage stage = new Stage();
             stage.setScene(new Scene(root1));
+            loader.<AddPartController>getController().setDocController(this);
+//            AddPartController addPartController = loader.getController();
+//            addPartController.setDocController(this);
             stage.show();
 
         } catch (Exception e) {
@@ -186,12 +194,13 @@ public class MainController implements Initializable {
     public void handlePartModify() {
         if (partClicked != null) {
             try {
-                FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("ModifyPart.fxml"));
-                Parent root1 = (Parent) fxmlLoader.load();
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("ModifyPart.fxml"));
+                Parent root1 = (Parent) loader.load();
                 Stage stage = new Stage();
                 stage.setScene(new Scene(root1));
-
-
+                loader.<ModifyPartController>getController().setDocController(this);
+                ModifyPartController modifyPartController = loader.getController();
+                modifyPartController.dataReceived(partClicked);
                 stage.show();
 
             } catch (Exception e) {
@@ -208,23 +217,38 @@ public class MainController implements Initializable {
         }
     }
 
+    @FXML
+    private TextField partSearchBar;
+
+    @FXML
+    private TextField productSearchBar;
+
     public void handleProductSearch() {
-        System.out.println("productSearch");
+        for (int i = 0; i < productsList.size(); i++) {
+        if (productsList[i].getName() == productSearchBar.getText()) {
+            partsList.filtered()
+        }
+        }
     }
 
     public void handleProductAdd() {
 
         try {
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("AddProduct.fxml"));
-            Parent root1 = (Parent) fxmlLoader.load();
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("AddProduct.fxml"));
+            Parent root = (Parent) loader.load();
             Stage stage = new Stage();
-            stage.setScene(new Scene(root1));
+            stage.setTitle("Add Project");
+            stage.setScene(new Scene(root));
+            loader.<AddProductController>getController().setDocController(this);
+            AddProductController controller1 = loader.getController();
+            controller1.partTable.getItems().setAll((partsList));
             stage.show();
 
         } catch (Exception e) {
             System.out.println((e));
         }
     }
+
     public void handleProductModify() {
 
         try {

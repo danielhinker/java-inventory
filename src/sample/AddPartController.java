@@ -3,6 +3,9 @@ package sample;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.event.ActionEvent;
+import javafx.event.Event;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.RadioButton;
@@ -14,6 +17,15 @@ import javafx.scene.control.Button;
 import java.io.IOException;
 
 public class AddPartController {
+
+    private MainController docController;
+
+
+
+    void setDocController(MainController docController) {
+        this.docController = docController;
+
+    }
 
     @FXML
     private Button cancelButton;
@@ -34,13 +46,13 @@ public class AddPartController {
     private TextField company;
 
     @FXML
-    private Button saveButton;
-
-    @FXML
     private RadioButton inhouse;
 
-    @FXML
-    private RadioButton outsourced;
+//    @FXML
+//    private Button saveButton;
+
+
+
 
     @FXML
     private TextField machineId;
@@ -51,28 +63,17 @@ public class AddPartController {
         stage.close();
     }
     @FXML
-    public void handleSave() throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("Main.fxml"));
-        Parent root = (Parent) loader.load();
+    public void handleSave(ActionEvent e) throws IOException {
 
-        MainController mainController = loader.getController();
         if (inhouse.isSelected()) {
-            mainController.dataReceived(new Part(Integer.parseInt(id.getText()), name.getText(), Integer.parseInt(price.getText()), Integer.parseInt(inv.getText()), Integer.parseInt(min.getText()), Integer.parseInt(max.getText()), true, Integer.parseInt(machineId.getText())));
+            docController.addPart(new Part(Integer.parseInt(id.getText()), name.getText(), Integer.parseInt(price.getText()), Integer.parseInt(inv.getText()), Integer.parseInt(min.getText()), Integer.parseInt(max.getText()), true, Integer.parseInt(machineId.getText())));
         } else {
-            mainController.dataReceived(new Part(Integer.parseInt(id.getText()), name.getText(), Integer.parseInt(price.getText()), Integer.parseInt(inv.getText()), Integer.parseInt(min.getText()), Integer.parseInt(max.getText()), false, company.getText()));
+            docController.addPart(new Part(Integer.parseInt(id.getText()), name.getText(), Integer.parseInt(price.getText()), Integer.parseInt(inv.getText()), Integer.parseInt(min.getText()), Integer.parseInt(max.getText()), false, company.getText()));
         }
-        Stage stage = (Stage) cancelButton.getScene().getWindow();
+
+        final Node previous = (Node) e.getSource();
+        final Stage stage = (Stage) previous.getScene().getWindow();
         stage.close();
-        Stage stage2 = new Stage();
-        stage2.setScene(new Scene(root));
-        stage2.show();
-//        Part tableViewParent = loader.load();
-//
-//        Scene tableViewScene = new Scene(tableViewParent);
-
-
-
-
 
     }
 
