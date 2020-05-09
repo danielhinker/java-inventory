@@ -12,7 +12,7 @@ public class Part {
     private int machineId;
     private String companyName;
 
-    // Setters
+
 
     public Part(int id, String name, double price, int stock, int min, int max, boolean inhouse, int machineId) {
         this.id = id;
@@ -31,6 +31,18 @@ public class Part {
         this.name = name;
         this.price = price;
         this.stock = stock;
+        this.min = min;
+        this.max = max;
+        this.inhouse = inhouse;
+        this.machineId = -1;
+        this.companyName = companyName;
+    }
+
+    public Part(int id, String name, double price, int min, int max, boolean inhouse, String companyName) {
+        this.id = id;
+        this.name = name;
+        this.price = price;
+        this.stock = 0;
         this.min = min;
         this.max = max;
         this.inhouse = inhouse;
@@ -62,7 +74,7 @@ public class Part {
         this.max = max;
     };
 
-    // Getter Methods
+
 
     public int getId() {
         return id;

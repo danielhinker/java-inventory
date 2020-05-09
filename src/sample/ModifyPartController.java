@@ -12,7 +12,7 @@ import javafx.stage.Stage;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-public class ModifyPartController implements Initializable {
+public class ModifyPartController {
 
     private Part clickedPart;
 
@@ -44,12 +44,23 @@ public class ModifyPartController implements Initializable {
     private RadioButton inhouse;
 
     @FXML
-    RadioButton outsourced;
+    private RadioButton outsourced;
+
+
+    public void inhouseClicked() {
+        company.setEditable(false);
+        machineId.setEditable(true);
+    }
+
+    public void outsourcedClicked() {
+        machineId.setEditable(false);
+        company.setEditable(true);
+    }
 
     @FXML
     private Button cancelButton;
 
-    //    @FXML
+    @FXML
     public void handleCancel() {
         Stage stage = (Stage) cancelButton.getScene().getWindow();
         stage.close();
@@ -69,12 +80,21 @@ public class ModifyPartController implements Initializable {
         stage.close();
     }
 
-    @Override
-    public void initialize(URL location, ResourceBundle resources) {
-
-    }
-
     public void dataReceived(Part clickedPart) {
         this.clickedPart = clickedPart;
+        name.setText(clickedPart.getName());
+        id.setText(Integer.toString(clickedPart.getId()));
+        if (clickedPart.getCompanyName() != null) {
+            company.setText(clickedPart.getCompanyName());
+            outsourced.setSelected(true);
+        } else {
+
+            machineId.setText(Integer.toString(clickedPart.getMachineId()));
+            inhouse.setSelected(true);
+        }
+
+        max.setText(Integer.toString(clickedPart.getMax()));
+        min.setText(Integer.toString(clickedPart.getMin()));
+
     }
 }

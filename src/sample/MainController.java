@@ -9,16 +9,15 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
-import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import javafx.event.EventHandler;
 
 import javax.xml.soap.Text;
 import java.net.URL;
+import java.util.Optional;
 import java.util.ResourceBundle;
 
 public class MainController implements Initializable {
@@ -115,19 +114,19 @@ public class MainController implements Initializable {
         return null;
     }
 
-    public ObservableList<Part> addSampleParts() {
+//    public ObservableList<Part> addSampleParts() {
+//
+//        partsList.add(new Part(1, "Part 1", 71.78, 2, 7, 3, true, 1));
+//
+//        return partsList;
+//    }
 
-        partsList.add(new Part(1, "Part 1", 71.78, 2, 7, 3, true, 1));
-
-        return partsList;
-    }
-
-    public ObservableList<Product> addSampleProducts() {
-
-        productsList.add(new Product(1, "Part 1", 71.78, 2, 7, 3));
-        productsList.add(new Product(2, "Part 2", 42.89, 3, 10, 1));
-        return productsList;
-    }
+//    public ObservableList<Product> addSampleProducts() {
+//
+//        productsList.add(new Product(1, "Part 1", 71.78, 2, 7, 3));
+//        productsList.add(new Product(2, "Part 2", 42.89, 3, 10, 1));
+//        return productsList;
+//    }
     ObservableList<Part> associatedParts;
     Part partClicked;
     Product productClicked;
@@ -140,15 +139,14 @@ public class MainController implements Initializable {
         partName.setCellValueFactory(new PropertyValueFactory<Part, String>("name"));
         partStock.setCellValueFactory(new PropertyValueFactory<Part, Integer>("stock"));
 
-        partTable.setItems(addSampleParts());
+        partTable.setItems(partsList);
 
         partTable.setOnMouseClicked(new EventHandler() {
             @Override
             public void handle(Event e) {
 
                 partClicked = partTable.getSelectionModel().getSelectedItem();
-//                associatedParts.
-//                System.out.println(partClicked);
+
             }
         });
 
@@ -157,14 +155,14 @@ public class MainController implements Initializable {
         productName.setCellValueFactory(new PropertyValueFactory<Product, String>("name"));
         productStock.setCellValueFactory(new PropertyValueFactory<Product, Integer>("stock"));
 
-        productTable.setItems(addSampleProducts());
+        productTable.setItems(productsList);
 
         productTable.setOnMouseClicked(new EventHandler() {
             @Override
             public void handle(Event e) {
 
                 productClicked = productTable.getSelectionModel().getSelectedItem();
-//                System.out.println(partClicked);
+//
             }
         });
     }
@@ -173,22 +171,26 @@ public class MainController implements Initializable {
 
     public void handlePartSearch() {
         System.out.println("Search");
+//        partTable.
+
     }
 
     public void handlePartAdd() {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("AddPart.fxml"));
-            Parent root1 = (Parent) loader.load();
-            Stage stage = new Stage();
-            stage.setScene(new Scene(root1));
-            loader.<AddPartController>getController().setDocController(this);
+
+            try {
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("AddPart.fxml"));
+                Parent root1 = (Parent) loader.load();
+                Stage stage = new Stage();
+                stage.setScene(new Scene(root1));
+                loader.<AddPartController>getController().setDocController(this);
 //            AddPartController addPartController = loader.getController();
 //            addPartController.setDocController(this);
-            stage.show();
+                stage.show();
 
-        } catch (Exception e) {
-            System.out.println((e));
-        }
+            } catch (Exception e) {
+                System.out.println((e));
+            }
+
     }
 
     public void handlePartModify() {
@@ -210,10 +212,16 @@ public class MainController implements Initializable {
     }
 
     public void handlePartDelete() {
-        System.out.println("partDelete");
+
         if (partClicked != null) {
-            partTable.getItems().remove(partClicked);
-            partClicked = null;
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+            alert.setTitle("Warning!");
+            alert.setHeaderText("Are you sure you want to delete this part?");
+            Optional<ButtonType> alertButton = alert.showAndWait();
+            if (alertButton.get() == ButtonType.OK) {
+                partTable.getItems().remove(partClicked);
+                partClicked = null;
+            }
         }
     }
 
@@ -223,53 +231,69 @@ public class MainController implements Initializable {
     @FXML
     private TextField productSearchBar;
 
+
     public void handleProductSearch() {
-        for (int i = 0; i < productsList.size(); i++) {
-        if (productsList[i].getName() == productSearchBar.getText()) {
-            partsList.filtered()
-        }
-        }
+
     }
 
     public void handleProductAdd() {
 
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("AddProduct.fxml"));
-            Parent root = (Parent) loader.load();
-            Stage stage = new Stage();
-            stage.setTitle("Add Project");
-            stage.setScene(new Scene(root));
-            loader.<AddProductController>getController().setDocController(this);
-            AddProductController controller1 = loader.getController();
-            controller1.partTable.getItems().setAll((partsList));
-            stage.show();
+            try {
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("AddProduct.fxml"));
+                Parent root = (Parent) loader.load();
+                Stage stage = new Stage();
 
-        } catch (Exception e) {
-            System.out.println((e));
-        }
+                stage.setScene(new Scene(root));
+                loader.<AddProductController>getController().setDocController(this);
+                AddProductController controller1 = loader.getController();
+                controller1.partTable.getItems().setAll((partsList));
+                stage.show();
+
+            } catch (Exception e) {
+                System.out.println((e));
+            }
+
     }
 
     public void handleProductModify() {
+        if (productClicked != null) {
+            try {
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("ModifyProduct.fxml"));
+                Parent root = (Parent) loader.load();
+                Stage stage = new Stage();
 
-        try {
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("ModifyProduct.fxml"));
-            Parent root1 = (Parent) fxmlLoader.load();
-            Stage stage = new Stage();
-            stage.setScene(new Scene(root1));
-            stage.show();
+                stage.setScene(new Scene(root));
+                loader.<ModifyProductController>getController().setDocController(this);
+                ModifyProductController controller1 = loader.getController();
+                controller1.partTable.getItems().setAll((partsList));
+                controller1.pickedPartTable.getItems().setAll((productClicked.getAllAssociatedParts()));
+                controller1.dataReceived(productClicked);
+                stage.show();
 
-        } catch (Exception e) {
-            System.out.println((e));
+            } catch (Exception e) {
+                System.out.println((e));
+            }
         }
     }
 
     public void handleProductDelete() {
-        System.out.println("productDelete");
+        if (productClicked != null) {
+
+                Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+                alert.setTitle("Warning!");
+                alert.setHeaderText("Are you sure you want to delete this product?");
+                Optional<ButtonType> alertButton = alert.showAndWait();
+                if (alertButton.get() == ButtonType.OK) {
+
+                    productTable.getItems().remove(productClicked);
+                    productClicked = null;
+                }
+        }
     }
 
     public void dataReceived(Part part) {
         partsList.add(part);
-//        System.out.println(text);
+
     }
 
 

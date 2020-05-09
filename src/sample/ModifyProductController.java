@@ -1,28 +1,192 @@
 package sample;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
+import javafx.fxml.Initializable;
+import javafx.scene.Node;
+import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 import javafx.event.ActionEvent;
 
-public class ModifyProductController {
+import java.net.URL;
+import java.util.ResourceBundle;
+
+public class ModifyProductController implements Initializable {
+
+
+    private MainController docController;
+
+    ObservableList<Part> partsList = FXCollections.observableArrayList();
+
+    ObservableList<Part> pickedPartsList = FXCollections.observableArrayList();
+
+    void setDocController(MainController docController) {
+        System.out.println('1');
+        this.docController = docController;
+        System.out.println(docController);
+
+    }
+
+    Part partClicked;
+
+    @FXML
+    TableView<Part> partTable;
+
+    @FXML
+    private TableColumn<Part, Integer> partId;
+
+    @FXML
+    private TableColumn<Part, String> partName;
+
+    @FXML
+    private TableColumn<Part, Integer> partStock;
+
+    @FXML
+    private TableColumn<Part, Double> partPrice;
+
+    @FXML
+    TableView<Part> pickedPartTable;
+
+    @FXML
+    private TableColumn<Part, Integer> pickedPartId;
+
+    @FXML
+    private TableColumn<Part, String> pickedPartName;
+
+    @FXML
+    private TableColumn<Part, Integer> pickedPartStock;
+
+    @FXML
+    private TableColumn<Part, Double> pickedPartPrice;
+
+    @FXML
+    private TextField id;
+
+    @FXML
+    private TextField name;
+
+    @FXML
+    private TextField inv;
+
+    @FXML
+    private TextField price;
+
+    @FXML
+    private TextField max;
+
+    @FXML
+    private TextField min;
 
     @FXML
     private Button cancelButton;
 
-    //    @FXML
+    @FXML
     public void handleCancel() {
         Stage stage = (Stage) cancelButton.getScene().getWindow();
         stage.close();
     }
 
+    public void handleSave(ActionEvent e) {
+
+            if (pickedPartsList == null) {
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("Error");
+                alert.setHeaderText("Choose a part associated with this product");
+                alert.show();
+            } else {
+                docController.productsList.remove(clickedProduct);
+                docController.addProduct(new Product(Integer.parseInt(id.getText()), name.getText(), Integer.parseInt(price.getText()), Integer.parseInt(inv.getText()), Integer.parseInt(min.getText()), Integer.parseInt(max.getText()), pickedPartsList));
+
+
+                final Node previous = (Node) e.getSource();
+                final Stage stage = (Stage) previous.getScene().getWindow();
+                stage.close();
+            }
+
+
+    }
+
     public void handleAdd() {
 
+        if (!pickedPartsList.contains(partClicked)) {
+            pickedPartTable.getItems().add(partClicked);
+            pickedPartsList.add(partClicked);
+            System.out.println(pickedPartsList);
+            partClicked = null;
+        }
+
+
     }
+
     public void handleDelete() {
 
-    }
-    public void handleSave() {
 
+        if (pickedPartsList.contains(partClicked)) {
+            pickedPartTable.getItems().remove(partClicked);
+            pickedPartsList.remove(partClicked);
+            partClicked = null;
+        }
+
+    }
+
+
+
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
+
+        partId.setCellValueFactory(new PropertyValueFactory<Part, Integer>("id"));
+
+        partPrice.setCellValueFactory(new PropertyValueFactory<Part, Double>("price"));
+
+        partName.setCellValueFactory(new PropertyValueFactory<Part, String>("name"));
+
+        partStock.setCellValueFactory(new PropertyValueFactory<Part, Integer>("stock"));
+
+
+//        partTable.setItems(addSampleParts());
+
+        pickedPartId.setCellValueFactory(new PropertyValueFactory<Part, Integer>("id"));
+
+        pickedPartPrice.setCellValueFactory(new PropertyValueFactory<Part, Double>("price"));
+
+        pickedPartName.setCellValueFactory(new PropertyValueFactory<Part, String>("name"));
+
+        pickedPartStock.setCellValueFactory(new PropertyValueFactory<Part, Integer>("stock"));
+
+//        pickedPartTable.setItems(clickedProduct.getAllAssociatedParts());
+
+        partTable.setOnMousePressed(new EventHandler<MouseEvent>() {
+
+            @Override
+            public void handle(MouseEvent event) {
+
+                partClicked = partTable.getSelectionModel().getSelectedItem();
+
+
+            }
+        });
+
+        pickedPartTable.setOnMousePressed(new EventHandler<MouseEvent>() {
+
+            @Override
+            public void handle(MouseEvent event) {
+
+                partClicked = pickedPartTable.getSelectionModel().getSelectedItem();
+
+            }
+        });
+
+    }
+
+    Product clickedProduct;
+
+
+    public void dataReceived(Product clickedProduct) {
+        this.clickedProduct = clickedProduct;
+        pickedPartsList = clickedProduct.getAllAssociatedParts();
     }
 }

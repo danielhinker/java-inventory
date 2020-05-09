@@ -15,12 +15,12 @@
             <Font size="20.0" />
          </font>
       </Label>
-      <RadioButton id="inhouse" fx:id="inhouse" layoutX="140.0" layoutY="40.0" mnemonicParsing="false" text="In-House">
+      <RadioButton id="inhouse" fx:id="inhouse" onAction="#inhouseClicked" layoutX="140.0" layoutY="40.0" mnemonicParsing="false" text="In-House">
          <toggleGroup>
             <ToggleGroup fx:id="categories" />
          </toggleGroup>
       </RadioButton>
-      <RadioButton id="outsourced" fx:id="outsourced" layoutX="235.0" layoutY="40.0" mnemonicParsing="false" text="Outsourced" toggleGroup="$categories" />
+      <RadioButton id="outsourced" fx:id="outsourced" onAction="#outsourcedClicked" layoutX="235.0" layoutY="40.0" mnemonicParsing="false" text="Outsourced" toggleGroup="$categories" />
       <Label layoutX="44.0" layoutY="95.0" text="ID" />
       <Label layoutX="44.0" layoutY="139.0" text="Name" />
       <Label layoutX="44.0" layoutY="185.0" text="Inv" />

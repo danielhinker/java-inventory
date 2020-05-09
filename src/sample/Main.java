@@ -8,14 +8,9 @@ import javafx.stage.Stage;
 
 public class Main extends Application {
 
-//    TableView<Part> partTable;
-//    TableView<Product> productTable;
 
     @Override
     public void start(Stage primaryStage) throws Exception{
-//        window = primaryStage;
-
-
 
         Parent root = FXMLLoader.load(getClass().getResource("Main.fxml"));
         primaryStage.setScene(new Scene(root, 800, 500));

@@ -20,10 +20,20 @@ public class Product {
         this.stock = stock;
         this.min = min;
         this.max = max;
-//        this.associatedParts = associatedParts;
+
     }
 
-    // Setters
+    public Product(int id, String name, double price, int stock, int min, int max, ObservableList<Part> associatedParts) {
+        this.id = id;
+        this.name = name;
+        this.price = price;
+        this.stock = stock;
+        this.min = min;
+        this.max = max;
+        this.associatedParts = associatedParts;
+    }
+
+
 
     public void setId(int id) {
         this.id = id;
@@ -62,9 +72,6 @@ public class Product {
         }
     }
 
-
-
-    // Getter Methods
 
     public int getId() {
         return id;
