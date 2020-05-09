@@ -1,8 +1,9 @@
 package sample;
 
-import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
+import javafx.collections.transformation.SortedList;
 import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -12,10 +13,8 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
-import javafx.scene.input.MouseEvent;
 import javafx.event.EventHandler;
 
-import javax.xml.soap.Text;
 import java.net.URL;
 import java.util.Optional;
 import java.util.ResourceBundle;
@@ -55,13 +54,6 @@ public class MainController implements Initializable {
     @FXML
     private TableColumn<Product, Double> productPrice;
 
-
-
-
-
-
-    private ObservableList<Part> allParts;
-    private ObservableList<Product> allProducts;
     ObservableList<Product> productsList = FXCollections.observableArrayList();
     ObservableList<Part> partsList = FXCollections.observableArrayList();
 
@@ -74,66 +66,14 @@ public class MainController implements Initializable {
         productsList.add(newProduct);
     }
 
-    public Part lookupPart(int partId) {
-        return null;
-    }
 
-    public Product lookupProduct(int productId) {
-        return null;
-    }
 
-    public ObservableList<Part> lookupPart(String partName) {
-        return null;
-    }
-
-    public ObservableList<Product> lookupProduct(String productName) {
-        return null;
-    }
-
-    public void updatePart(int index, Part selectedPart) {
-
-    }
-
-    public void updateProduct(int index, Product newProduct) {
-
-    }
-
-    public boolean deletePart(Part selectedPart) {
-        return false;
-    }
-
-    public boolean deleteProduct(Product selectedProduct) {
-        return false;
-    }
-
-    public ObservableList<Part> getAllParts() {
-        return null;
-    }
-
-    public ObservableList<Product> getAllProducts() {
-        return null;
-    }
-
-//    public ObservableList<Part> addSampleParts() {
-//
-//        partsList.add(new Part(1, "Part 1", 71.78, 2, 7, 3, true, 1));
-//
-//        return partsList;
-//    }
-
-//    public ObservableList<Product> addSampleProducts() {
-//
-//        productsList.add(new Product(1, "Part 1", 71.78, 2, 7, 3));
-//        productsList.add(new Product(2, "Part 2", 42.89, 3, 10, 1));
-//        return productsList;
-//    }
-    ObservableList<Part> associatedParts;
     Part partClicked;
     Product productClicked;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-//        partTable.getItems().setAll(addSampleParts());
+
         partId.setCellValueFactory(new PropertyValueFactory<Part, Integer>("id"));
         partPrice.setCellValueFactory(new PropertyValueFactory<Part, Double>("price"));
         partName.setCellValueFactory(new PropertyValueFactory<Part, String>("name"));
@@ -141,14 +81,7 @@ public class MainController implements Initializable {
 
         partTable.setItems(partsList);
 
-        partTable.setOnMouseClicked(new EventHandler() {
-            @Override
-            public void handle(Event e) {
-
-                partClicked = partTable.getSelectionModel().getSelectedItem();
-
-            }
-        });
+        partTable.setOnMouseClicked((EventHandler<Event>) e -> partClicked = partTable.getSelectionModel().getSelectedItem());
 
         productId.setCellValueFactory(new PropertyValueFactory<Product, Integer>("id"));
         productPrice.setCellValueFactory(new PropertyValueFactory<Product, Double>("price"));
@@ -157,34 +90,43 @@ public class MainController implements Initializable {
 
         productTable.setItems(productsList);
 
-        productTable.setOnMouseClicked(new EventHandler() {
-            @Override
-            public void handle(Event e) {
+        productTable.setOnMouseClicked((EventHandler<Event>) e -> {
 
-                productClicked = productTable.getSelectionModel().getSelectedItem();
+            productClicked = productTable.getSelectionModel().getSelectedItem();
 //
-            }
         });
     }
 
 
 
     public void handlePartSearch() {
-        System.out.println("Search");
-//        partTable.
-
+        FilteredList<Part> data = new FilteredList<>(partsList, p -> true);
+        data.setPredicate(part -> {
+            if (partSearchBar.getText() == null) {
+                return true;
+            }
+            if(part.getName().contains(partSearchBar.getText())) {
+                return true;
+            }
+            if(Integer.toString(part.getId()) == partSearchBar.getText()) {
+                return true;
+            }
+            return false;
+        });
+        SortedList<Part> output = new SortedList<>(data);
+        output.comparatorProperty().bind(partTable.comparatorProperty());
+        partTable.setItems(output);
     }
 
     public void handlePartAdd() {
 
             try {
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("AddPart.fxml"));
-                Parent root1 = (Parent) loader.load();
+                Parent root1 = loader.load();
                 Stage stage = new Stage();
                 stage.setScene(new Scene(root1));
                 loader.<AddPartController>getController().setDocController(this);
-//            AddPartController addPartController = loader.getController();
-//            addPartController.setDocController(this);
+
                 stage.show();
 
             } catch (Exception e) {
@@ -197,7 +139,7 @@ public class MainController implements Initializable {
         if (partClicked != null) {
             try {
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("ModifyPart.fxml"));
-                Parent root1 = (Parent) loader.load();
+                Parent root1 = loader.load();
                 Stage stage = new Stage();
                 stage.setScene(new Scene(root1));
                 loader.<ModifyPartController>getController().setDocController(this);
@@ -233,16 +175,37 @@ public class MainController implements Initializable {
 
 
     public void handleProductSearch() {
+        FilteredList<Product> data = new FilteredList<>(productsList, p -> true);
 
+        data.setPredicate(product -> {
+            if (productSearchBar.getText() == null) {
+                return true;
+            }
+            if(product.getName().contains(productSearchBar.getText())) {
+                return true;
+            }
+            if(Integer.toString(product.getId()) == productSearchBar.getText()) {
+                return true;
+            }
+            return false;
+        });
+
+        SortedList<Product> output = new SortedList<>(data);
+        output.comparatorProperty().bind(productTable.comparatorProperty());
+        productTable.setItems(output);
     }
 
     public void handleProductAdd() {
-
+        if (partsList.size() == 0) {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Error");
+            alert.setHeaderText("Need parts before adding a product");
+            alert.show();
+        } else {
             try {
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("AddProduct.fxml"));
-                Parent root = (Parent) loader.load();
+                Parent root = loader.load();
                 Stage stage = new Stage();
-
                 stage.setScene(new Scene(root));
                 loader.<AddProductController>getController().setDocController(this);
                 AddProductController controller1 = loader.getController();
@@ -252,6 +215,7 @@ public class MainController implements Initializable {
             } catch (Exception e) {
                 System.out.println((e));
             }
+        }
 
     }
 
@@ -259,7 +223,7 @@ public class MainController implements Initializable {
         if (productClicked != null) {
             try {
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("ModifyProduct.fxml"));
-                Parent root = (Parent) loader.load();
+                Parent root = loader.load();
                 Stage stage = new Stage();
 
                 stage.setScene(new Scene(root));

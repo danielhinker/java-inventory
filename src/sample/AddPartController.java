@@ -1,27 +1,17 @@
 package sample;
 
-import javafx.application.Platform;
-import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.event.ActionEvent;
-import javafx.event.Event;
+import javafx.fxml.FXML;
 import javafx.scene.Node;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
-import javafx.scene.input.InputEvent;
 import javafx.stage.Stage;
-import javafx.scene.control.Button;
-
-import java.io.IOException;
 
 public class AddPartController {
 
     private MainController docController;
-
-
 
     void setDocController(MainController docController) {
         this.docController = docController;
@@ -73,7 +63,7 @@ public class AddPartController {
         stage.close();
     }
     @FXML
-    public void handleSave(ActionEvent e) throws IOException {
+    public void handleSave(ActionEvent e) {
         if (!inhouse.isSelected() && !outsourced.isSelected()) {
          Alert alert = new Alert(Alert.AlertType.INFORMATION);
          alert.setTitle("Error");
@@ -82,9 +72,15 @@ public class AddPartController {
 
         } else {
             if (inhouse.isSelected()) {
-                docController.addPart(new Part(Integer.parseInt(id.getText()), name.getText(), Integer.parseInt(price.getText()), Integer.parseInt(inv.getText()), Integer.parseInt(min.getText()), Integer.parseInt(max.getText()), true, Integer.parseInt(machineId.getText())));
+                docController.addPart(new Part(Integer.parseInt(id.getText()), name.getText(),
+                        Integer.parseInt(price.getText()), Integer.parseInt(inv.getText()),
+                        Integer.parseInt(min.getText()), Integer.parseInt(max.getText()),
+                        true, Integer.parseInt(machineId.getText())));
             } else {
-                docController.addPart(new Part(Integer.parseInt(id.getText()), name.getText(), Integer.parseInt(price.getText()), Integer.parseInt(inv.getText()), Integer.parseInt(min.getText()), Integer.parseInt(max.getText()), false, company.getText()));
+                docController.addPart(new Part(Integer.parseInt(id.getText()), name.getText(),
+                        Integer.parseInt(price.getText()), Integer.parseInt(inv.getText()),
+                        Integer.parseInt(min.getText()), Integer.parseInt(max.getText()),
+                        false, company.getText()));
             }
 
             final Node previous = (Node) e.getSource();

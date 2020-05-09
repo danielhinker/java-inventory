@@ -2,6 +2,8 @@ package sample;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
+import javafx.collections.transformation.SortedList;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -68,21 +70,38 @@ public class ModifyProductController implements Initializable {
 
     @FXML
     private TextField name;
-
-    @FXML
-    private TextField inv;
-
+    @FXML private TextField inv;
     @FXML
     private TextField price;
-
     @FXML
     private TextField max;
-
     @FXML
     private TextField min;
 
     @FXML
     private Button cancelButton;
+
+    @FXML
+    private TextField searchBar;
+
+    public void handleSearch() {
+        FilteredList<Part> data = new FilteredList<>(partsList, p -> true);
+        data.setPredicate(part -> {
+            if (searchBar.getText() == null) {
+                return true;
+            }
+            if(part.getName().contains(searchBar.getText())) {
+                return true;
+            }
+            if(Integer.toString(part.getId()) == searchBar.getText()) {
+                return true;
+            }
+            return false;
+        });
+        SortedList<Part> output = new SortedList<>(data);
+        output.comparatorProperty().bind(partTable.comparatorProperty());
+        partTable.setItems(output);
+    }
 
     @FXML
     public void handleCancel() {
@@ -100,86 +119,43 @@ public class ModifyProductController implements Initializable {
             } else {
                 docController.productsList.remove(clickedProduct);
                 docController.addProduct(new Product(Integer.parseInt(id.getText()), name.getText(), Integer.parseInt(price.getText()), Integer.parseInt(inv.getText()), Integer.parseInt(min.getText()), Integer.parseInt(max.getText()), pickedPartsList));
-
-
                 final Node previous = (Node) e.getSource();
                 final Stage stage = (Stage) previous.getScene().getWindow();
                 stage.close();
             }
-
-
     }
 
     public void handleAdd() {
-
         if (!pickedPartsList.contains(partClicked)) {
             pickedPartTable.getItems().add(partClicked);
             pickedPartsList.add(partClicked);
             System.out.println(pickedPartsList);
             partClicked = null;
         }
-
-
     }
 
     public void handleDelete() {
-
-
         if (pickedPartsList.contains(partClicked)) {
             pickedPartTable.getItems().remove(partClicked);
             pickedPartsList.remove(partClicked);
             partClicked = null;
         }
-
     }
-
-
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
 
         partId.setCellValueFactory(new PropertyValueFactory<Part, Integer>("id"));
-
         partPrice.setCellValueFactory(new PropertyValueFactory<Part, Double>("price"));
-
         partName.setCellValueFactory(new PropertyValueFactory<Part, String>("name"));
-
         partStock.setCellValueFactory(new PropertyValueFactory<Part, Integer>("stock"));
-
-
-//        partTable.setItems(addSampleParts());
-
         pickedPartId.setCellValueFactory(new PropertyValueFactory<Part, Integer>("id"));
-
         pickedPartPrice.setCellValueFactory(new PropertyValueFactory<Part, Double>("price"));
-
         pickedPartName.setCellValueFactory(new PropertyValueFactory<Part, String>("name"));
-
         pickedPartStock.setCellValueFactory(new PropertyValueFactory<Part, Integer>("stock"));
-
-//        pickedPartTable.setItems(clickedProduct.getAllAssociatedParts());
-
-        partTable.setOnMousePressed(new EventHandler<MouseEvent>() {
-
-            @Override
-            public void handle(MouseEvent event) {
-
-                partClicked = partTable.getSelectionModel().getSelectedItem();
-
-
-            }
-        });
-
-        pickedPartTable.setOnMousePressed(new EventHandler<MouseEvent>() {
-
-            @Override
-            public void handle(MouseEvent event) {
-
-                partClicked = pickedPartTable.getSelectionModel().getSelectedItem();
-
-            }
-        });
-
+        partTable.setItems(partsList);
+        partTable.setOnMousePressed(event -> partClicked = partTable.getSelectionModel().getSelectedItem());
+        pickedPartTable.setOnMousePressed(event -> partClicked = pickedPartTable.getSelectionModel().getSelectedItem());
     }
 
     Product clickedProduct;

@@ -1,7 +1,6 @@
 package sample;
 
 import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.event.ActionEvent;
@@ -9,43 +8,24 @@ import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
-import java.net.URL;
-import java.util.ResourceBundle;
 
 public class ModifyPartController {
 
     private Part clickedPart;
-
     private MainController docController;
-
     void setDocController(MainController docController) {
         this.docController = docController;
     }
-
-    @FXML
-    private TextField id;
-    @FXML
-    private TextField name;
-    @FXML
-    private TextField inv;
-    @FXML
-    private TextField price;
-    @FXML
-    private TextField max;
-    @FXML
-    private TextField min;
-    @FXML
-    private TextField company;
-
-    @FXML
-    private TextField machineId;
-
-    @FXML
-    private RadioButton inhouse;
-
-    @FXML
-    private RadioButton outsourced;
-
+    @FXML private TextField id;
+    @FXML private TextField name;
+    @FXML private TextField inv;
+    @FXML private TextField price;
+    @FXML private TextField max;
+    @FXML private TextField min;
+    @FXML private TextField company;
+    @FXML private TextField machineId;
+    @FXML private RadioButton inhouse;
+    @FXML private RadioButton outsourced;
 
     public void inhouseClicked() {
         company.setEditable(false);

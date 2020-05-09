@@ -15,8 +15,8 @@
             <Font size="19.0" />
          </font>
       </Label>
-      <Button layoutX="482.0" layoutY="44.0" mnemonicParsing="false" text="Search" />
-      <TextField layoutX="569.0" layoutY="44.0" promptText="Search" />
+      <Button layoutX="482.0" layoutY="44.0" mnemonicParsing="false" text="Search" onAction="#handleSearch"/>
+      <TextField layoutX="569.0" layoutY="44.0" promptText="Search" fx:id="searchBar"/>
       <TableView layoutX="406.0" layoutY="95.0" prefHeight="140.0" prefWidth="330.0" fx:id="partTable">
         <columns>
            <TableColumn prefWidth="75.0" text="Part ID" fx:id="partId"/>

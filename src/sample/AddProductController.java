@@ -2,6 +2,8 @@ package sample;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
+import javafx.collections.transformation.SortedList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -83,7 +85,27 @@ public class AddProductController implements Initializable {
     @FXML
     private Button cancelButton;
 
+    @FXML
+    private TextField searchBar;
 
+    public void handleSearch() {
+        FilteredList<Part> data = new FilteredList<>(partsList, p -> true);
+        data.setPredicate(part -> {
+            if (searchBar.getText() == null) {
+                return true;
+            }
+            if(part.getName().contains(searchBar.getText())) {
+                return true;
+            }
+            if(Integer.toString(part.getId()) == searchBar.getText()) {
+                return true;
+            }
+            return false;
+        });
+        SortedList<Part> output = new SortedList<>(data);
+        output.comparatorProperty().bind(partTable.comparatorProperty());
+        partTable.setItems(output);
+    }
 
         @FXML
     public void handleCancel() {
@@ -92,7 +114,7 @@ public class AddProductController implements Initializable {
     }
 
     public void handleSave(ActionEvent e) {
-        if (pickedPartsList == null) {
+        if (pickedPartsList.size() == 0) {
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("Error");
             alert.setHeaderText("Choose a part associated with this product");
@@ -115,55 +137,29 @@ public class AddProductController implements Initializable {
             System.out.println(pickedPartsList);
             partClicked = null;
         }
-
-
     }
 
     public void handleDelete() {
-
-
         if (pickedPartsList.contains(partClicked)) {
             pickedPartTable.getItems().remove(partClicked);
             pickedPartsList.remove(partClicked);
             partClicked = null;
         }
-
     }
-
-    public ObservableList<Part> addSampleParts() {
-
-        partsList.add(new Part(1, "Part 1", 71.78, 2, 7, 3, true, 1));
-
-        return partsList;
-    }
-
-
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-
         partId.setCellValueFactory(new PropertyValueFactory<>("id"));
-
         partPrice.setCellValueFactory(new PropertyValueFactory<>("price"));
-
         partName.setCellValueFactory(new PropertyValueFactory<>("name"));
-
         partStock.setCellValueFactory(new PropertyValueFactory<>("stock"));
-
-        partTable.setItems(addSampleParts());
-
         pickedPartId.setCellValueFactory(new PropertyValueFactory<>("id"));
-
         pickedPartPrice.setCellValueFactory(new PropertyValueFactory<>("price"));
-
         pickedPartName.setCellValueFactory(new PropertyValueFactory<>("name"));
-
         pickedPartStock.setCellValueFactory(new PropertyValueFactory<>("stock"));
-
-
+        partTable.setItems(partsList);
         partTable.setOnMousePressed(event -> partClicked = partTable.getSelectionModel().getSelectedItem());
-
         pickedPartTable.setOnMousePressed(event -> partClicked = pickedPartTable.getSelectionModel().getSelectedItem());
-
     }
+
 }
