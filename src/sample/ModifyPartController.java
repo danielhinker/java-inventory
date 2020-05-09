@@ -54,7 +54,6 @@ public class ModifyPartController {
         } else {
             docController.addPart(new Part(Integer.parseInt(id.getText()), name.getText(), Integer.parseInt(price.getText()), Integer.parseInt(inv.getText()), Integer.parseInt(min.getText()), Integer.parseInt(max.getText()), false, company.getText()));
         }
-
         final Node previous = (Node) e.getSource();
         final Stage stage = (Stage) previous.getScene().getWindow();
         stage.close();
@@ -68,13 +67,10 @@ public class ModifyPartController {
             company.setText(clickedPart.getCompanyName());
             outsourced.setSelected(true);
         } else {
-
             machineId.setText(Integer.toString(clickedPart.getMachineId()));
             inhouse.setSelected(true);
         }
-
         max.setText(Integer.toString(clickedPart.getMax()));
         min.setText(Integer.toString(clickedPart.getMin()));
-
     }
 }

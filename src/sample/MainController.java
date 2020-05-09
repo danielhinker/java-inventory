@@ -14,45 +14,22 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 import javafx.event.EventHandler;
-
 import java.net.URL;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
 public class MainController implements Initializable {
 
-
-
-    @FXML
-    TableView<Part> partTable;
-
-    @FXML
-    private TableColumn<Part, Integer> partId;
-
-    @FXML
-    private TableColumn<Part, String> partName;
-
-    @FXML
-    private TableColumn<Part, Integer> partStock;
-
-    @FXML
-    private TableColumn<Part, Double> partPrice;
-
-
-    @FXML
-    TableView<Product> productTable;
-
-    @FXML
-    private TableColumn<Product, Integer> productId;
-
-    @FXML
-    private TableColumn<Product, String> productName;
-
-    @FXML
-    private TableColumn<Product, Integer> productStock;
-
-    @FXML
-    private TableColumn<Product, Double> productPrice;
+    @FXML TableView<Part> partTable;
+    @FXML private TableColumn<Part, Integer> partId;
+    @FXML private TableColumn<Part, String> partName;
+    @FXML private TableColumn<Part, Integer> partStock;
+    @FXML private TableColumn<Part, Double> partPrice;
+    @FXML TableView<Product> productTable;
+    @FXML private TableColumn<Product, Integer> productId;
+    @FXML private TableColumn<Product, String> productName;
+    @FXML private TableColumn<Product, Integer> productStock;
+    @FXML private TableColumn<Product, Double> productPrice;
 
     ObservableList<Product> productsList = FXCollections.observableArrayList();
     ObservableList<Part> partsList = FXCollections.observableArrayList();
@@ -62,42 +39,29 @@ public class MainController implements Initializable {
     }
 
     public void addProduct(Product newProduct) {
-
         productsList.add(newProduct);
     }
-
-
 
     Part partClicked;
     Product productClicked;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-
         partId.setCellValueFactory(new PropertyValueFactory<Part, Integer>("id"));
         partPrice.setCellValueFactory(new PropertyValueFactory<Part, Double>("price"));
         partName.setCellValueFactory(new PropertyValueFactory<Part, String>("name"));
         partStock.setCellValueFactory(new PropertyValueFactory<Part, Integer>("stock"));
-
         partTable.setItems(partsList);
-
         partTable.setOnMouseClicked((EventHandler<Event>) e -> partClicked = partTable.getSelectionModel().getSelectedItem());
-
         productId.setCellValueFactory(new PropertyValueFactory<Product, Integer>("id"));
         productPrice.setCellValueFactory(new PropertyValueFactory<Product, Double>("price"));
         productName.setCellValueFactory(new PropertyValueFactory<Product, String>("name"));
         productStock.setCellValueFactory(new PropertyValueFactory<Product, Integer>("stock"));
-
         productTable.setItems(productsList);
-
         productTable.setOnMouseClicked((EventHandler<Event>) e -> {
-
             productClicked = productTable.getSelectionModel().getSelectedItem();
-//
         });
     }
-
-
 
     public void handlePartSearch() {
         FilteredList<Part> data = new FilteredList<>(partsList, p -> true);
@@ -119,20 +83,16 @@ public class MainController implements Initializable {
     }
 
     public void handlePartAdd() {
-
             try {
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("AddPart.fxml"));
                 Parent root1 = loader.load();
                 Stage stage = new Stage();
                 stage.setScene(new Scene(root1));
                 loader.<AddPartController>getController().setDocController(this);
-
                 stage.show();
-
             } catch (Exception e) {
                 System.out.println((e));
             }
-
     }
 
     public void handlePartModify() {
@@ -146,7 +106,6 @@ public class MainController implements Initializable {
                 ModifyPartController modifyPartController = loader.getController();
                 modifyPartController.dataReceived(partClicked);
                 stage.show();
-
             } catch (Exception e) {
                 System.out.println((e));
             }
@@ -154,7 +113,6 @@ public class MainController implements Initializable {
     }
 
     public void handlePartDelete() {
-
         if (partClicked != null) {
             Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
             alert.setTitle("Warning!");
@@ -167,12 +125,8 @@ public class MainController implements Initializable {
         }
     }
 
-    @FXML
-    private TextField partSearchBar;
-
-    @FXML
-    private TextField productSearchBar;
-
+    @FXML private TextField partSearchBar;
+    @FXML private TextField productSearchBar;
 
     public void handleProductSearch() {
         FilteredList<Product> data = new FilteredList<>(productsList, p -> true);
@@ -254,11 +208,4 @@ public class MainController implements Initializable {
                 }
         }
     }
-
-    public void dataReceived(Part part) {
-        partsList.add(part);
-
-    }
-
-
 }

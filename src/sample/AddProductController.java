@@ -17,87 +17,42 @@ import java.util.ResourceBundle;
 
 public class AddProductController implements Initializable {
 
-
-
     private MainController docController;
-
     ObservableList<Part> partsList = FXCollections.observableArrayList();
-
     ObservableList<Part> pickedPartsList = FXCollections.observableArrayList();
+    Part partClicked;
+    @FXML TableView<Part> partTable;
+    @FXML private TableColumn<Part, Integer> partId;
+    @FXML private TableColumn<Part, String> partName;
+    @FXML private TableColumn<Part, Integer> partStock;
+    @FXML private TableColumn<Part, Double> partPrice;
+    @FXML TableView<Part> pickedPartTable;
+    @FXML private TableColumn<Part, Integer> pickedPartId;
+    @FXML private TableColumn<Part, String> pickedPartName;
+    @FXML private TableColumn<Part, Integer> pickedPartStock;
+    @FXML private TableColumn<Part, Double> pickedPartPrice;
+    @FXML private TextField id;
+    @FXML private TextField name;
+    @FXML private TextField inv;
+    @FXML private TextField price;
+    @FXML private TextField max;
+    @FXML private TextField min;
+    @FXML private Button cancelButton;
+    @FXML private TextField searchBar;
 
     void setDocController(MainController docController) {
-        System.out.println('1');
         this.docController = docController;
-        System.out.println(docController);
-
     }
-
-    Part partClicked;
-
-    @FXML
-    TableView<Part> partTable;
-
-    @FXML
-    private TableColumn<Part, Integer> partId;
-
-    @FXML
-    private TableColumn<Part, String> partName;
-
-    @FXML
-    private TableColumn<Part, Integer> partStock;
-
-    @FXML
-    private TableColumn<Part, Double> partPrice;
-
-    @FXML
-    TableView<Part> pickedPartTable;
-
-    @FXML
-    private TableColumn<Part, Integer> pickedPartId;
-
-    @FXML
-    private TableColumn<Part, String> pickedPartName;
-
-    @FXML
-    private TableColumn<Part, Integer> pickedPartStock;
-
-    @FXML
-    private TableColumn<Part, Double> pickedPartPrice;
-
-    @FXML
-    private TextField id;
-
-    @FXML
-    private TextField name;
-
-    @FXML
-    private TextField inv;
-
-    @FXML
-    private TextField price;
-
-    @FXML
-    private TextField max;
-
-    @FXML
-    private TextField min;
-
-    @FXML
-    private Button cancelButton;
-
-    @FXML
-    private TextField searchBar;
-
     public void handleSearch() {
         FilteredList<Part> data = new FilteredList<>(partsList, p -> true);
         data.setPredicate(part -> {
             if (searchBar.getText() == null) {
                 return true;
             }
-            if(part.getName().contains(searchBar.getText())) {
+            if (part.getName().contains(searchBar.getText())) {
                 return true;
             }
-            if(Integer.toString(part.getId()) == searchBar.getText()) {
+            if (Integer.toString(part.getId()) == searchBar.getText()) {
                 return true;
             }
             return false;
@@ -107,7 +62,7 @@ public class AddProductController implements Initializable {
         partTable.setItems(output);
     }
 
-        @FXML
+    @FXML
     public void handleCancel() {
         Stage stage = (Stage) cancelButton.getScene().getWindow();
         stage.close();
@@ -120,9 +75,8 @@ public class AddProductController implements Initializable {
             alert.setHeaderText("Choose a part associated with this product");
             alert.show();
         } else {
-            docController.addProduct(new Product(Integer.parseInt(id.getText()), name.getText(), Integer.parseInt(price.getText()), Integer.parseInt(inv.getText()), Integer.parseInt(min.getText()), Integer.parseInt(max.getText()), pickedPartsList));
-            System.out.println(pickedPartsList);
-
+            docController.addProduct(new Product(Integer.parseInt(id.getText()), name.getText(),
+                    Integer.parseInt(price.getText()), Integer.parseInt(inv.getText()), Integer.parseInt(min.getText()), Integer.parseInt(max.getText()), pickedPartsList));
             final Node previous = (Node) e.getSource();
             final Stage stage = (Stage) previous.getScene().getWindow();
             stage.close();
@@ -134,7 +88,6 @@ public class AddProductController implements Initializable {
         if (!pickedPartsList.contains(partClicked)) {
             pickedPartTable.getItems().add(partClicked);
             pickedPartsList.add(partClicked);
-            System.out.println(pickedPartsList);
             partClicked = null;
         }
     }

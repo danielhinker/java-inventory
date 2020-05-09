@@ -4,85 +4,46 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
-import javafx.event.EventHandler;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
-import javafx.event.ActionEvent;
-
 import java.net.URL;
 import java.util.ResourceBundle;
 
 public class ModifyProductController implements Initializable {
 
-
     private MainController docController;
-
     ObservableList<Part> partsList = FXCollections.observableArrayList();
-
     ObservableList<Part> pickedPartsList = FXCollections.observableArrayList();
 
     void setDocController(MainController docController) {
-        System.out.println('1');
         this.docController = docController;
-        System.out.println(docController);
-
     }
 
     Part partClicked;
 
-    @FXML
-    TableView<Part> partTable;
-
-    @FXML
-    private TableColumn<Part, Integer> partId;
-
-    @FXML
-    private TableColumn<Part, String> partName;
-
-    @FXML
-    private TableColumn<Part, Integer> partStock;
-
-    @FXML
-    private TableColumn<Part, Double> partPrice;
-
-    @FXML
-    TableView<Part> pickedPartTable;
-
-    @FXML
-    private TableColumn<Part, Integer> pickedPartId;
-
-    @FXML
-    private TableColumn<Part, String> pickedPartName;
-
-    @FXML
-    private TableColumn<Part, Integer> pickedPartStock;
-
-    @FXML
-    private TableColumn<Part, Double> pickedPartPrice;
-
-    @FXML
-    private TextField id;
-
-    @FXML
-    private TextField name;
+    @FXML TableView<Part> partTable;
+    @FXML private TableColumn<Part, Integer> partId;
+    @FXML private TableColumn<Part, String> partName;
+    @FXML private TableColumn<Part, Integer> partStock;
+    @FXML private TableColumn<Part, Double> partPrice;
+    @FXML TableView<Part> pickedPartTable;
+    @FXML private TableColumn<Part, Integer> pickedPartId;
+    @FXML private TableColumn<Part, String> pickedPartName;
+    @FXML private TableColumn<Part, Integer> pickedPartStock;
+    @FXML private TableColumn<Part, Double> pickedPartPrice;
+    @FXML private TextField id;
+    @FXML private TextField name;
     @FXML private TextField inv;
-    @FXML
-    private TextField price;
-    @FXML
-    private TextField max;
-    @FXML
-    private TextField min;
-
-    @FXML
-    private Button cancelButton;
-
-    @FXML
-    private TextField searchBar;
+    @FXML private TextField price;
+    @FXML private TextField max;
+    @FXML private TextField min;
+    @FXML private Button cancelButton;
+    @FXML private TextField searchBar;
 
     public void handleSearch() {
         FilteredList<Part> data = new FilteredList<>(partsList, p -> true);
@@ -129,7 +90,6 @@ public class ModifyProductController implements Initializable {
         if (!pickedPartsList.contains(partClicked)) {
             pickedPartTable.getItems().add(partClicked);
             pickedPartsList.add(partClicked);
-            System.out.println(pickedPartsList);
             partClicked = null;
         }
     }
@@ -144,7 +104,6 @@ public class ModifyProductController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-
         partId.setCellValueFactory(new PropertyValueFactory<Part, Integer>("id"));
         partPrice.setCellValueFactory(new PropertyValueFactory<Part, Double>("price"));
         partName.setCellValueFactory(new PropertyValueFactory<Part, String>("name"));
@@ -159,7 +118,6 @@ public class ModifyProductController implements Initializable {
     }
 
     Product clickedProduct;
-
 
     public void dataReceived(Product clickedProduct) {
         this.clickedProduct = clickedProduct;
