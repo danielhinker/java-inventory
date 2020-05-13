@@ -26,6 +26,7 @@ public class ModifyProductController implements Initializable {
 
     Part partClicked;
 
+
     @FXML TableView<Part> partTable;
     @FXML private TableColumn<Part, Integer> partId;
     @FXML private TableColumn<Part, String> partName;
@@ -71,15 +72,24 @@ public class ModifyProductController implements Initializable {
     }
 
     public void handleSave(ActionEvent e) {
-
-            if (pickedPartsList == null) {
+            double totalPartPrice = pickedPartsList.stream().mapToDouble(Part::getPrice).sum();
+            if (pickedPartsList.size() == 0) {
                 Alert alert = new Alert(Alert.AlertType.INFORMATION);
                 alert.setTitle("Error");
                 alert.setHeaderText("Choose a part associated with this product");
                 alert.show();
+            } else if (name.getText().isEmpty() || price.getText().isEmpty() || inv.getText().isEmpty()) {
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("Error");
+                alert.setHeaderText("Please make sure there is a value for Name, Inventory Levels, and Price");
+                alert.show();
+            } else if (Double.parseDouble(price.getText()) < totalPartPrice) {
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("Error");
+                alert.setHeaderText("Product must cost more than it's associated parts.");
+                alert.show();
             } else {
-                docController.productsList.remove(clickedProduct);
-                docController.addProduct(new Product(Integer.parseInt(id.getText()), name.getText(), Integer.parseInt(price.getText()), Integer.parseInt(inv.getText()), Integer.parseInt(min.getText()), Integer.parseInt(max.getText()), pickedPartsList));
+                docController.inventory.updateProduct(clickedProductIndex, new Product(Integer.parseInt(id.getText()), name.getText(), Double.parseDouble(price.getText()), Integer.parseInt(inv.getText()), Integer.parseInt(min.getText()), Integer.parseInt(max.getText()), pickedPartsList));
                 final Node previous = (Node) e.getSource();
                 final Stage stage = (Stage) previous.getScene().getWindow();
                 stage.close();
@@ -118,9 +128,20 @@ public class ModifyProductController implements Initializable {
     }
 
     Product clickedProduct;
+    int clickedProductIndex;
 
-    public void dataReceived(Product clickedProduct) {
+    public void dataReceived(Product clickedProduct, int clickedProductIndex) {
         this.clickedProduct = clickedProduct;
+        this.clickedProductIndex = clickedProductIndex;
         pickedPartsList = clickedProduct.getAllAssociatedParts();
+
+
+        name.setText(clickedProduct.getName());
+        id.setText(Integer.toString(clickedProduct.getId()));
+        System.out.println(clickedProduct.getClass());
+        price.setText(Double.toString(clickedProduct.getPrice()));
+        inv.setText(Integer.toString(clickedProduct.getStock()));
+        max.setText(Integer.toString(clickedProduct.getMax()));
+        min.setText(Integer.toString(clickedProduct.getMin()));
     }
 }

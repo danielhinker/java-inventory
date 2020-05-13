@@ -1,6 +1,6 @@
 package sample;
 
-public class Part {
+public abstract class Part {
 
     private int id;
     private String name;
@@ -9,12 +9,8 @@ public class Part {
     private int min;
     private int max;
     private boolean inhouse;
-    private int machineId;
-    private String companyName;
 
-
-
-    public Part(int id, String name, double price, int stock, int min, int max, boolean inhouse, int machineId) {
+    public Part(int id, String name, double price, int stock, int min, int max, boolean inhouse) {
         this.id = id;
         this.name = name;
         this.price = price;
@@ -22,32 +18,16 @@ public class Part {
         this.min = min;
         this.max = max;
         this.inhouse = inhouse;
-        this.machineId = machineId;
-        this.companyName = null;
     }
 
-    public Part(int id, String name, double price, int stock, int min, int max, boolean inhouse, String companyName) {
+    public Part(int id, String name, double price, int min, int max, boolean inhouse) {
         this.id = id;
         this.name = name;
         this.price = price;
-        this.stock = stock;
         this.min = min;
         this.max = max;
         this.inhouse = inhouse;
-        this.machineId = -1;
-        this.companyName = companyName;
-    }
-
-    public Part(int id, String name, double price, int min, int max, boolean inhouse, String companyName) {
-        this.id = id;
-        this.name = name;
-        this.price = price;
         this.stock = 0;
-        this.min = min;
-        this.max = max;
-        this.inhouse = inhouse;
-        this.machineId = -1;
-        this.companyName = companyName;
     }
 
     public void setId(int id) {
@@ -100,12 +80,8 @@ public class Part {
         return max;
     };
 
-    public int getMachineId() {
-        return machineId;
-    }
-
-    public String getCompanyName() {
-        return companyName;
+    public boolean getInHouse() {
+        return inhouse;
     }
 
 }

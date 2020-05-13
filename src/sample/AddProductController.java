@@ -69,14 +69,25 @@ public class AddProductController implements Initializable {
     }
 
     public void handleSave(ActionEvent e) {
+        double totalPartPrice = pickedPartsList.stream().mapToDouble(Part::getPrice).sum();
         if (pickedPartsList.size() == 0) {
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("Error");
             alert.setHeaderText("Choose a part associated with this product");
             alert.show();
+        } else if (name.getText().isEmpty() || price.getText().isEmpty() || inv.getText().isEmpty()) {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Error");
+            alert.setHeaderText("Please make sure there is a value for Name, Inventory Levels, and Price");
+            alert.show();
+        } else if (Double.parseDouble(price.getText()) < totalPartPrice) {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Error");
+            alert.setHeaderText("Product must cost more than it's associated parts.");
+            alert.show();
         } else {
-            docController.addProduct(new Product(Integer.parseInt(id.getText()), name.getText(),
-                    Integer.parseInt(price.getText()), Integer.parseInt(inv.getText()), Integer.parseInt(min.getText()), Integer.parseInt(max.getText()), pickedPartsList));
+            docController.inventory.addProduct(new Product(Integer.parseInt(id.getText()), name.getText(),
+                    Double.parseDouble(price.getText()), Integer.parseInt(inv.getText()), Integer.parseInt(min.getText()), Integer.parseInt(max.getText()), pickedPartsList));
             final Node previous = (Node) e.getSource();
             final Stage stage = (Stage) previous.getScene().getWindow();
             stage.close();

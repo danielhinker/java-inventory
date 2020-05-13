@@ -49,20 +49,24 @@ public class AddPartController {
     @FXML
     public void handleSave(ActionEvent e) {
         if (!inhouse.isSelected() && !outsourced.isSelected()) {
-         Alert alert = new Alert(Alert.AlertType.INFORMATION);
-         alert.setTitle("Error");
-         alert.setHeaderText("Choose if part is in-house or out-sourced");
-         alert.show();
-
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Error");
+            alert.setHeaderText("Choose if part is in-house or out-sourced");
+            alert.show();
+        } else if (name.getText().isEmpty() || price.getText().isEmpty() || inv.getText().isEmpty()) {
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("Error");
+                alert.setHeaderText("Please make sure there is a value for Name, Inventory Levels, and Price");
+                alert.show();
         } else {
             if (inhouse.isSelected()) {
-                docController.addPart(new Part(Integer.parseInt(id.getText()), name.getText(),
-                        Integer.parseInt(price.getText()), Integer.parseInt(inv.getText()),
+                docController.inventory.addPart(new InHouse(Integer.parseInt(id.getText()), name.getText(),
+                        Double.parseDouble(price.getText()), Integer.parseInt(inv.getText()),
                         Integer.parseInt(min.getText()), Integer.parseInt(max.getText()),
                         true, Integer.parseInt(machineId.getText())));
             } else {
-                docController.addPart(new Part(Integer.parseInt(id.getText()), name.getText(),
-                        Integer.parseInt(price.getText()), Integer.parseInt(inv.getText()),
+                docController.inventory.addPart(new OutSourced(Integer.parseInt(id.getText()), name.getText(),
+                        Double.parseDouble(price.getText()), Integer.parseInt(inv.getText()),
                         Integer.parseInt(min.getText()), Integer.parseInt(max.getText()),
                         false, company.getText()));
             }

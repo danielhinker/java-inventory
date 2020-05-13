@@ -1,8 +1,5 @@
 package sample;
 
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
-import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
 import javafx.event.Event;
 import javafx.fxml.FXML;
@@ -20,6 +17,8 @@ import java.util.ResourceBundle;
 
 public class MainController implements Initializable {
 
+    Inventory inventory = new Inventory();
+
     @FXML TableView<Part> partTable;
     @FXML private TableColumn<Part, Integer> partId;
     @FXML private TableColumn<Part, String> partName;
@@ -31,55 +30,40 @@ public class MainController implements Initializable {
     @FXML private TableColumn<Product, Integer> productStock;
     @FXML private TableColumn<Product, Double> productPrice;
 
-    ObservableList<Product> productsList = FXCollections.observableArrayList();
-    ObservableList<Part> partsList = FXCollections.observableArrayList();
-
-    public void addPart(Part newPart) {
-        partsList.add(newPart);
-    }
-
-    public void addProduct(Product newProduct) {
-        productsList.add(newProduct);
-    }
-
     Part partClicked;
+    int partClickedIndex;
     Product productClicked;
+    int productClickedIndex;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        partId.setCellValueFactory(new PropertyValueFactory<Part, Integer>("id"));
-        partPrice.setCellValueFactory(new PropertyValueFactory<Part, Double>("price"));
-        partName.setCellValueFactory(new PropertyValueFactory<Part, String>("name"));
-        partStock.setCellValueFactory(new PropertyValueFactory<Part, Integer>("stock"));
-        partTable.setItems(partsList);
-        partTable.setOnMouseClicked((EventHandler<Event>) e -> partClicked = partTable.getSelectionModel().getSelectedItem());
-        productId.setCellValueFactory(new PropertyValueFactory<Product, Integer>("id"));
-        productPrice.setCellValueFactory(new PropertyValueFactory<Product, Double>("price"));
-        productName.setCellValueFactory(new PropertyValueFactory<Product, String>("name"));
-        productStock.setCellValueFactory(new PropertyValueFactory<Product, Integer>("stock"));
-        productTable.setItems(productsList);
+
+
+        partId.setCellValueFactory(new PropertyValueFactory<>("id"));
+        partPrice.setCellValueFactory(new PropertyValueFactory<>("price"));
+        partName.setCellValueFactory(new PropertyValueFactory<>("name"));
+        partStock.setCellValueFactory(new PropertyValueFactory<>("stock"));
+        partTable.setItems(inventory.getAllParts());
+        partTable.setOnMouseClicked((EventHandler<Event>) e -> {
+            partClicked = partTable.getSelectionModel().getSelectedItem();
+            partClickedIndex = partTable.getSelectionModel().getSelectedIndex();
+        });
+        productId.setCellValueFactory(new PropertyValueFactory<>("id"));
+        productPrice.setCellValueFactory(new PropertyValueFactory<>("price"));
+        productName.setCellValueFactory(new PropertyValueFactory<>("name"));
+        productStock.setCellValueFactory(new PropertyValueFactory<>("stock"));
+        productTable.setItems(inventory.getAllProducts());
         productTable.setOnMouseClicked((EventHandler<Event>) e -> {
             productClicked = productTable.getSelectionModel().getSelectedItem();
+            productClickedIndex = productTable.getSelectionModel().getSelectedIndex();
         });
     }
 
     public void handlePartSearch() {
-        FilteredList<Part> data = new FilteredList<>(partsList, p -> true);
-        data.setPredicate(part -> {
-            if (partSearchBar.getText() == null) {
-                return true;
-            }
-            if(part.getName().contains(partSearchBar.getText())) {
-                return true;
-            }
-            if(Integer.toString(part.getId()) == partSearchBar.getText()) {
-                return true;
-            }
-            return false;
-        });
-        SortedList<Part> output = new SortedList<>(data);
-        output.comparatorProperty().bind(partTable.comparatorProperty());
-        partTable.setItems(output);
+            SortedList<Part> output = (SortedList<Part>) inventory.lookupPart(partSearchBar.getText());
+            output.comparatorProperty().bind(partTable.comparatorProperty());
+            partTable.setItems(output);
+
     }
 
     public void handlePartAdd() {
@@ -104,7 +88,7 @@ public class MainController implements Initializable {
                 stage.setScene(new Scene(root1));
                 loader.<ModifyPartController>getController().setDocController(this);
                 ModifyPartController modifyPartController = loader.getController();
-                modifyPartController.dataReceived(partClicked);
+                modifyPartController.dataReceived(partClicked, partClickedIndex);
                 stage.show();
             } catch (Exception e) {
                 System.out.println((e));
@@ -119,38 +103,31 @@ public class MainController implements Initializable {
             alert.setHeaderText("Are you sure you want to delete this part?");
             Optional<ButtonType> alertButton = alert.showAndWait();
             if (alertButton.get() == ButtonType.OK) {
-                partTable.getItems().remove(partClicked);
+                inventory.deletePart(partClicked);
+
+                inventory.getAllProducts().forEach(e -> {
+                    if (e.getAllAssociatedParts().get(0) == partClicked && e.getAllAssociatedParts().size() == 1) {
+                        inventory.deleteProduct(e);
+                    }
+                });
+
+            }
                 partClicked = null;
             }
         }
-    }
+
 
     @FXML private TextField partSearchBar;
     @FXML private TextField productSearchBar;
 
     public void handleProductSearch() {
-        FilteredList<Product> data = new FilteredList<>(productsList, p -> true);
-
-        data.setPredicate(product -> {
-            if (productSearchBar.getText() == null) {
-                return true;
-            }
-            if(product.getName().contains(productSearchBar.getText())) {
-                return true;
-            }
-            if(Integer.toString(product.getId()) == productSearchBar.getText()) {
-                return true;
-            }
-            return false;
-        });
-
-        SortedList<Product> output = new SortedList<>(data);
+        SortedList<Product> output = (SortedList<Product>) inventory.lookupProduct(productSearchBar.getText());
         output.comparatorProperty().bind(productTable.comparatorProperty());
         productTable.setItems(output);
     }
 
     public void handleProductAdd() {
-        if (partsList.size() == 0) {
+        if (inventory.getAllParts().size() == 0) {
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("Error");
             alert.setHeaderText("Need parts before adding a product");
@@ -163,7 +140,7 @@ public class MainController implements Initializable {
                 stage.setScene(new Scene(root));
                 loader.<AddProductController>getController().setDocController(this);
                 AddProductController controller1 = loader.getController();
-                controller1.partTable.getItems().setAll((partsList));
+                controller1.partTable.getItems().setAll((inventory.getAllParts()));
                 stage.show();
 
             } catch (Exception e) {
@@ -183,9 +160,9 @@ public class MainController implements Initializable {
                 stage.setScene(new Scene(root));
                 loader.<ModifyProductController>getController().setDocController(this);
                 ModifyProductController controller1 = loader.getController();
-                controller1.partTable.getItems().setAll((partsList));
+                controller1.partTable.getItems().setAll((inventory.getAllParts()));
                 controller1.pickedPartTable.getItems().setAll((productClicked.getAllAssociatedParts()));
-                controller1.dataReceived(productClicked);
+                controller1.dataReceived(productClicked, productClickedIndex);
                 stage.show();
 
             } catch (Exception e) {
@@ -195,6 +172,8 @@ public class MainController implements Initializable {
     }
 
     public void handleProductDelete() {
+
+
         if (productClicked != null) {
 
                 Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
@@ -203,9 +182,14 @@ public class MainController implements Initializable {
                 Optional<ButtonType> alertButton = alert.showAndWait();
                 if (alertButton.get() == ButtonType.OK) {
 
-                    productTable.getItems().remove(productClicked);
+                    inventory.deleteProduct(productClicked);
+
                     productClicked = null;
                 }
         }
+    }
+
+    public void handleExit() {
+        System.exit(0);
     }
 }
