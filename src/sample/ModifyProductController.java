@@ -89,7 +89,7 @@ public class ModifyProductController implements Initializable {
                 alert.setHeaderText("Product must cost more than it's associated parts.");
                 alert.show();
             } else {
-                docController.inventory.updateProduct(clickedProductIndex, new Product(Integer.parseInt(id.getText()), name.getText(), Double.parseDouble(price.getText()), Integer.parseInt(inv.getText()), Integer.parseInt(min.getText()), Integer.parseInt(max.getText()), pickedPartsList));
+                docController.inventory.updateProduct(clickedProductIndex, new Product(name.getText(), Double.parseDouble(price.getText()), Integer.parseInt(inv.getText()), Integer.parseInt(min.getText()), Integer.parseInt(max.getText()), pickedPartsList));
                 final Node previous = (Node) e.getSource();
                 final Stage stage = (Stage) previous.getScene().getWindow();
                 stage.close();
@@ -97,7 +97,7 @@ public class ModifyProductController implements Initializable {
     }
 
     public void handleAdd() {
-        if (!pickedPartsList.contains(partClicked)) {
+        if (!pickedPartsList.contains(partClicked) && partClicked != null) {
             pickedPartTable.getItems().add(partClicked);
             pickedPartsList.add(partClicked);
             partClicked = null;
@@ -123,8 +123,16 @@ public class ModifyProductController implements Initializable {
         pickedPartName.setCellValueFactory(new PropertyValueFactory<Part, String>("name"));
         pickedPartStock.setCellValueFactory(new PropertyValueFactory<Part, Integer>("stock"));
         partTable.setItems(partsList);
-        partTable.setOnMousePressed(event -> partClicked = partTable.getSelectionModel().getSelectedItem());
-        pickedPartTable.setOnMousePressed(event -> partClicked = pickedPartTable.getSelectionModel().getSelectedItem());
+        partTable.setOnMousePressed(event -> {
+            if (partTable.getSelectionModel().getSelectedItem() != null) {
+                partClicked = partTable.getSelectionModel().getSelectedItem();
+            }
+        });
+        pickedPartTable.setOnMousePressed(event -> {
+            if (pickedPartTable.getSelectionModel().getSelectedItem() != null) {
+                partClicked = pickedPartTable.getSelectionModel().getSelectedItem();
+            }
+        });
     }
 
     Product clickedProduct;
@@ -133,6 +141,8 @@ public class ModifyProductController implements Initializable {
     public void dataReceived(Product clickedProduct, int clickedProductIndex) {
         this.clickedProduct = clickedProduct;
         this.clickedProductIndex = clickedProductIndex;
+        id.setDisable(true);
+        id.setText(Integer.toString(Product.getIdCounter()));
         pickedPartsList = clickedProduct.getAllAssociatedParts();
 
 

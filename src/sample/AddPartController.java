@@ -2,6 +2,7 @@ package sample;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
@@ -9,7 +10,10 @@ import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
-public class AddPartController {
+import java.net.URL;
+import java.util.ResourceBundle;
+
+public class AddPartController implements Initializable {
 
     private MainController docController;
 
@@ -60,12 +64,12 @@ public class AddPartController {
                 alert.show();
         } else {
             if (inhouse.isSelected()) {
-                docController.inventory.addPart(new InHouse(Integer.parseInt(id.getText()), name.getText(),
+                docController.inventory.addPart(new InHouse(name.getText(),
                         Double.parseDouble(price.getText()), Integer.parseInt(inv.getText()),
                         Integer.parseInt(min.getText()), Integer.parseInt(max.getText()),
                         true, Integer.parseInt(machineId.getText())));
             } else {
-                docController.inventory.addPart(new OutSourced(Integer.parseInt(id.getText()), name.getText(),
+                docController.inventory.addPart(new OutSourced(name.getText(),
                         Double.parseDouble(price.getText()), Integer.parseInt(inv.getText()),
                         Integer.parseInt(min.getText()), Integer.parseInt(max.getText()),
                         false, company.getText()));
@@ -74,5 +78,11 @@ public class AddPartController {
             final Stage stage = (Stage) previous.getScene().getWindow();
             stage.close();
         }
+    }
+
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
+        this.id.setDisable(true);
+        this.id.setText(Integer.toString(Part.getIdCounter()));
     }
 }

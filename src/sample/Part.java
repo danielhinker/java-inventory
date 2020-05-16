@@ -2,6 +2,7 @@ package sample;
 
 public abstract class Part {
 
+    private static int idCounter = 1;
     private int id;
     private String name;
     private double price;
@@ -10,8 +11,8 @@ public abstract class Part {
     private int max;
     private boolean inhouse;
 
-    public Part(int id, String name, double price, int stock, int min, int max, boolean inhouse) {
-        this.id = id;
+    public Part(String name, double price, int stock, int min, int max, boolean inhouse) {
+        this.id = idCounter++;
         this.name = name;
         this.price = price;
         this.stock = stock;
@@ -20,14 +21,18 @@ public abstract class Part {
         this.inhouse = inhouse;
     }
 
-    public Part(int id, String name, double price, int min, int max, boolean inhouse) {
-        this.id = id;
+    public Part(String name, double price, int min, int max, boolean inhouse) {
+        this.id = idCounter++;
         this.name = name;
         this.price = price;
         this.min = min;
         this.max = max;
         this.inhouse = inhouse;
         this.stock = 0;
+    }
+
+    public static int getIdCounter() {
+        return idCounter;
     }
 
     public void setId(int id) {

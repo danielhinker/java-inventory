@@ -3,6 +3,8 @@ package sample;
 import javafx.collections.ObservableList;
 
 public class Product {
+
+    private static int idCounter = 1;
     private int id;
     private String name;
     private double price;
@@ -12,8 +14,8 @@ public class Product {
     private ObservableList<Part> associatedParts;
 
 
-    public Product(int id, String name, double price, int min, int max, ObservableList<Part> associatedParts) {
-        this.id = id;
+    public Product(String name, double price, int min, int max, ObservableList<Part> associatedParts) {
+        this.id = idCounter++;
         this.name = name;
         this.price = price;
         this.stock = 0;
@@ -22,8 +24,8 @@ public class Product {
         this.associatedParts = associatedParts;
     }
 
-    public Product(int id, String name, double price, int stock, int min, int max, ObservableList<Part> associatedParts) {
-        this.id = id;
+    public Product(String name, double price, int stock, int min, int max, ObservableList<Part> associatedParts) {
+        this.id = idCounter++;
         this.name = name;
         this.price = price;
         this.stock = stock;
@@ -32,7 +34,9 @@ public class Product {
         this.associatedParts = associatedParts;
     }
 
-
+    public static int getIdCounter() {
+        return idCounter;
+    }
 
     public void setId(int id) {
         this.id = id;

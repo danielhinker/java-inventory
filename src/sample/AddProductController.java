@@ -86,7 +86,7 @@ public class AddProductController implements Initializable {
             alert.setHeaderText("Product must cost more than it's associated parts.");
             alert.show();
         } else {
-            docController.inventory.addProduct(new Product(Integer.parseInt(id.getText()), name.getText(),
+            docController.inventory.addProduct(new Product(name.getText(),
                     Double.parseDouble(price.getText()), Integer.parseInt(inv.getText()), Integer.parseInt(min.getText()), Integer.parseInt(max.getText()), pickedPartsList));
             final Node previous = (Node) e.getSource();
             final Stage stage = (Stage) previous.getScene().getWindow();
@@ -96,7 +96,7 @@ public class AddProductController implements Initializable {
 
     public void handleAdd() {
 
-        if (!pickedPartsList.contains(partClicked)) {
+        if (!pickedPartsList.contains(partClicked) && partClicked != null) {
             pickedPartTable.getItems().add(partClicked);
             pickedPartsList.add(partClicked);
             partClicked = null;
@@ -113,6 +113,8 @@ public class AddProductController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        id.setDisable(true);
+        id.setText(Integer.toString(Product.getIdCounter()));
         partId.setCellValueFactory(new PropertyValueFactory<>("id"));
         partPrice.setCellValueFactory(new PropertyValueFactory<>("price"));
         partName.setCellValueFactory(new PropertyValueFactory<>("name"));
@@ -122,8 +124,18 @@ public class AddProductController implements Initializable {
         pickedPartName.setCellValueFactory(new PropertyValueFactory<>("name"));
         pickedPartStock.setCellValueFactory(new PropertyValueFactory<>("stock"));
         partTable.setItems(partsList);
-        partTable.setOnMousePressed(event -> partClicked = partTable.getSelectionModel().getSelectedItem());
-        pickedPartTable.setOnMousePressed(event -> partClicked = pickedPartTable.getSelectionModel().getSelectedItem());
+        partTable.setOnMousePressed(event -> {
+
+            if (partTable.getSelectionModel().getSelectedItem() != null) {
+
+                partClicked = partTable.getSelectionModel().getSelectedItem();
+            }
+        });
+        pickedPartTable.setOnMousePressed(event -> {
+            if (pickedPartTable.getSelectionModel().getSelectedItem() != null) {
+                partClicked = pickedPartTable.getSelectionModel().getSelectedItem();
+            }
+        });
     }
 
 }
