@@ -2,7 +2,7 @@ package sample;
 
 public abstract class Part {
 
-    private static int idCounter = 1;
+    private static int idCounter = 0;
     private int id;
     private String name;
     private double price;
@@ -35,6 +35,10 @@ public abstract class Part {
         return idCounter;
     }
 
+    public static void setIdCounter(int counter) {
+        idCounter = counter;
+    }
+
     public void setId(int id) {
         this.id = id;
     };
@@ -59,6 +63,9 @@ public abstract class Part {
         this.max = max;
     };
 
+    public void setInhouse(boolean inhouse) {
+        this.inhouse = inhouse;
+    }
 
 
     public int getId() {

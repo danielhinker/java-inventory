@@ -4,7 +4,7 @@ import javafx.collections.ObservableList;
 
 public class Product {
 
-    private static int idCounter = 1;
+    private static int idCounter = 0;
     private int id;
     private String name;
     private double price;
@@ -36,6 +36,10 @@ public class Product {
 
     public static int getIdCounter() {
         return idCounter;
+    }
+
+    public static void setIdCounter(int counter) {
+        idCounter = counter;
     }
 
     public void setId(int id) {

@@ -62,18 +62,41 @@ public class ModifyPartController implements Initializable {
             alert.setHeaderText("Please make sure there is a value for Name, Inventory Levels, and Price");
             alert.show();
         } else if (inhouse.isSelected()) {
-            docController.inventory.updatePart(clickedPartIndex, new InHouse(name.getText(),
-                    Double.parseDouble(price.getText()), Integer.parseInt(inv.getText()),
-                    Integer.parseInt(min.getText()), Integer.parseInt(max.getText()), true,
-                    Integer.parseInt(machineId.getText())));
+            if (machineId.getText().isEmpty()) {
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("Error");
+                alert.setHeaderText("Enter Machine ID");
+                alert.show();
+            } else {
+                int previousCounter = Part.getIdCounter();
+                Part.setIdCounter(clickedPartIndex);
+                docController.inventory.updatePart(clickedPartIndex, new InHouse(name.getText(),
+                        Double.parseDouble(price.getText()), Integer.parseInt(inv.getText()),
+                        Integer.parseInt(min.getText()), Integer.parseInt(max.getText()), true,
+                        Integer.parseInt(machineId.getText())));
+                Part.setIdCounter(previousCounter);
+                final Node previous = (Node) e.getSource();
+                final Stage stage = (Stage) previous.getScene().getWindow();
+                stage.close();
+            }
         } else {
-            docController.inventory.updatePart(clickedPartIndex, new OutSourced(name.getText(),
-                    Double.parseDouble(price.getText()), Integer.parseInt(inv.getText()),
-                    Integer.parseInt(min.getText()), Integer.parseInt(max.getText()), false,
-                    company.getText()));
-            final Node previous = (Node) e.getSource();
-            final Stage stage = (Stage) previous.getScene().getWindow();
-            stage.close();
+            if (company.getText().isEmpty()) {
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("Error");
+                alert.setHeaderText("Enter Company Name");
+                alert.show();
+            } else {
+                int previousCounter = Part.getIdCounter();
+                Part.setIdCounter(clickedPartIndex);
+                docController.inventory.updatePart(clickedPartIndex, new OutSourced(name.getText(),
+                        Double.parseDouble(price.getText()), Integer.parseInt(inv.getText()),
+                        Integer.parseInt(min.getText()), Integer.parseInt(max.getText()), false,
+                        company.getText()));
+                Part.setIdCounter(previousCounter);
+                final Node previous = (Node) e.getSource();
+                final Stage stage = (Stage) previous.getScene().getWindow();
+                stage.close();
+            }
         }
 
     }

@@ -64,7 +64,9 @@ public class Inventory {
     }
 
     public void updatePart(int index, Part selectedPart) {
+
         allParts.set(index, selectedPart);
+
     }
 
     public void updateProduct(int index, Product selectedProduct) {

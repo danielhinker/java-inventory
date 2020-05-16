@@ -89,10 +89,13 @@ public class ModifyProductController implements Initializable {
                 alert.setHeaderText("Product must cost more than it's associated parts.");
                 alert.show();
             } else {
+                int previousCounter = Product.getIdCounter();
+                Product.setIdCounter(clickedProductIndex);
                 docController.inventory.updateProduct(clickedProductIndex, new Product(name.getText(), Double.parseDouble(price.getText()), Integer.parseInt(inv.getText()), Integer.parseInt(min.getText()), Integer.parseInt(max.getText()), pickedPartsList));
                 final Node previous = (Node) e.getSource();
                 final Stage stage = (Stage) previous.getScene().getWindow();
                 stage.close();
+                Product.setIdCounter(previousCounter);
             }
     }
 

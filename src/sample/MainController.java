@@ -1,5 +1,7 @@
 package sample;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.collections.transformation.SortedList;
 import javafx.event.Event;
 import javafx.fxml.FXML;
@@ -103,14 +105,24 @@ public class MainController implements Initializable {
             alert.setHeaderText("Are you sure you want to delete this part?");
             Optional<ButtonType> alertButton = alert.showAndWait();
             if (alertButton.get() == ButtonType.OK) {
-                inventory.deletePart(partClicked);
 
-                inventory.getAllProducts().forEach(e -> {
-                    if (e.getAllAssociatedParts().get(0) == partClicked && e.getAllAssociatedParts().size() == 1) {
-                        inventory.deleteProduct(e);
-                    }
+                ObservableList<Product> productsToDelete = FXCollections.observableArrayList();
+
+                inventory.getAllProducts().forEach(product -> {
+                    System.out.println(product);
+                    product.getAllAssociatedParts().forEach(part -> {
+                        System.out.println(part);
+                        if (part.getId() == partClicked.getId()) {
+                            productsToDelete.add((product));
+                        }
+                    });
+
                 });
 
+                productsToDelete.forEach(e->{
+                    inventory.getAllProducts().remove(e);
+                });
+                inventory.deletePart(partClicked);
             }
                 partClicked = null;
             }
